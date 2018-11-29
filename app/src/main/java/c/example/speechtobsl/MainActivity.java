@@ -11,8 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.io.IOException;
 
+import c.example.parser.StanfordParser;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mStartRecording = false;
 
     private SpeechRecognitionListener speech = null;
-    private Parser parser;
+    private StanfordParser parser;
 
     private boolean permissionToRecordAccepted = false;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         speech = new SpeechRecognitionListener(this);
-        parser = new Parser();
+        parser = new StanfordParser();
     }
 
     @Override
