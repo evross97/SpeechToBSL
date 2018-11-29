@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.io.IOException;
 
 
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mStartRecording = false;
 
     private SpeechRecognitionListener speech = null;
-    private StanfordParser parser = null;
+    private Parser parser;
 
     private boolean permissionToRecordAccepted = false;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
@@ -55,11 +56,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         speech = new SpeechRecognitionListener(this);
-        try {
-            parser = new StanfordParser();
-        } catch(IOException | ClassNotFoundException e) {
-            Log.i(LOG_TAG, "unable to parse string");
-        }
+        parser = new Parser();
     }
 
     @Override
