@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-import c.example.parser.StanfordParser;
 import c.example.speechtobsl.services.ParserService;
 
 

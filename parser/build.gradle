@@ -2,7 +2,8 @@ apply plugin: 'java-library'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "edu.stanford.nlp:stanford-parser:3.9.2"
+    implementation files('libs/stanfor-core.jar')
+    implementation files('libs/stanford-corenlp-3.9.2-models.jar')
 }
 
 sourceCompatibility = "8"

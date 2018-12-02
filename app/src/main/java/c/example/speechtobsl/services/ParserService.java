@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.loopj.android.http.*;
+
 import c.example.parser.StanfordParser;
+
 
 public class ParserService extends IntentService {
 
@@ -16,6 +19,7 @@ public class ParserService extends IntentService {
     public ParserService() {
         super("ParserService");
         parser = new StanfordParser();
+        AsyncHttpClient client = new AsyncHttpClient();
     }
 
     @Override
