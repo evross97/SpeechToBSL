@@ -1,10 +1,15 @@
 package c.example.speechtobsl;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +18,7 @@ import android.widget.TextView;
 
 
 import c.example.parser.StanfordParser;
+import c.example.speechtobsl.services.ParserService;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -26,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mStartRecording = false;
 
     private SpeechRecognitionListener speech = null;
-    private StanfordParser parser;
+    private BroadcastReceiver bReceiver = null;
 
     private boolean permissionToRecordAccepted = false;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
@@ -56,7 +62,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         speech = new SpeechRecognitionListener(this);
-        parser = new StanfordParser();
+
+        bReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String status = intent.getStringExtra("parser-status");
+                Log.i(LOG_TAG, "I got something: " + status);
+                if(status.equals("done")) {
+                    String result = intent.getStringExtra("parser-done");
+                    System.out.println(result);
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(bReceiver, new IntentFilter("parser"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(bReceiver);
     }
 
     @Override
@@ -80,12 +109,11 @@ public class MainActivity extends AppCompatActivity {
             mRecordText.setText("Press the red button to start recording");
             speech.stopListening();
             mTextConverted.setText(speech.decodedSpeech);
-            parseText(speech.decodedSpeech);
+            Intent parserIntent = new Intent(this, ParserService.class);
+            parserIntent.putExtra("messageText", "anything");
+            startService(parserIntent);
+            Log.i(LOG_TAG, "started service");
         }
-    }
-
-    public void parseText(String text) {
-        parser.parseString(text);
     }
 
 }
