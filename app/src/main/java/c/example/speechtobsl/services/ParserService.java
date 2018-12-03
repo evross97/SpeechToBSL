@@ -7,19 +7,24 @@ import android.util.Log;
 
 import com.loopj.android.http.*;
 
-import c.example.parser.StanfordParser;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import c.example.parser.ParserServer;
+import cz.msebera.android.httpclient.Header;
 
 
 public class ParserService extends IntentService {
 
     private final String LOG_TAG = "BSL-services-parser";
     private String messageText;
-    private StanfordParser parser;
+    private ParserClient parser;
+    private ParserServer server;
 
     public ParserService() {
         super("ParserService");
-        parser = new StanfordParser();
-        AsyncHttpClient client = new AsyncHttpClient();
+        parser = new ParserClient();
+        //server = new ParserServer();
     }
 
     @Override
@@ -29,12 +34,37 @@ public class ParserService extends IntentService {
             messageText = intent.getStringExtra("messageText");
             Log.i(LOG_TAG, messageText);
             localIntent.putExtra("parser-status", "going");
-            String result = parser.parseString(messageText);
+            parseSentence(messageText, localIntent);
             localIntent.putExtra("parser-status", "done");
-            localIntent.putExtra("parser-done", result);
+            //localIntent.putExtra("parser-done", result);
         } catch (NullPointerException e) {
             localIntent.putExtra("parser-status", "failed-no message present");
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }
+
+    private void parseSentence(String text, Intent intent) {
+        //server.run();
+        RequestParams params = new RequestParams();
+        params.put("properties","'annotators':'tokenize,ssplit,pos,depparse,udfeats'");
+        params.put("data", text);
+        parser.post(params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                System.out.println("DID IT: " + response.toString());
+                intent.putExtra("parser-done", response.toString());
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                System.out.println("DID IT 2: ");
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                System.out.println("FAILED");
+            }
+        });
+    }
+
+
+
 }

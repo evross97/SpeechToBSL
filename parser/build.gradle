@@ -4,6 +4,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/stanfor-core.jar')
     implementation files('libs/stanford-corenlp-3.9.2-models.jar')
+    implementation 'com.sun.net.httpserver:http:20070405'
+    implementation files("${System.getProperty('java.home')}/../lib/tools.jar")
 }
 
 sourceCompatibility = "8"

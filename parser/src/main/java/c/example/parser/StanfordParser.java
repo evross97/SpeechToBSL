@@ -21,8 +21,8 @@ public class StanfordParser {
 
     public String parseString(String text) {
         String text2 = "The boy saw the girl with the telescope.";
-        Annotation ann = new Annotation(text2);
-        pipeline.annotate(ann);
+        //Annotation ann = new Annotation(text2);
+        pipeline.process(text2);
 
         return null;
     }
