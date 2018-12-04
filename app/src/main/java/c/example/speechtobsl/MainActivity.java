@@ -17,7 +17,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-import c.example.speechtobsl.services.ParserService;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import c.example.speechtobsl.services.ParserClient;
+import c.example.speechtobsl.services.SpeechRecognitionListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean mStartRecording = false;
 
     private SpeechRecognitionListener speech = null;
-    private BroadcastReceiver bReceiver = null;
+    private ParserClient parser = null;
+    private BroadcastReceiver pbReceiver = null;
+    private BroadcastReceiver scbReceiver = null;
+
 
     private boolean permissionToRecordAccepted = false;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
@@ -61,16 +68,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         speech = new SpeechRecognitionListener(this);
-
-        bReceiver = new BroadcastReceiver() {
+        parser = new ParserClient(this);
+        pbReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String status = intent.getStringExtra("parser-status");
                 Log.i(LOG_TAG, "I got something: " + status);
                 if(status.equals("done")) {
                     String result = intent.getStringExtra("parser-done");
-                    System.out.println(result);
+                    try {
+                        JSONObject jsonResult = new JSONObject(result);
+                        mTextConverted.setText(jsonResult.toString(2));
+                    } catch (JSONException e) {
+                        System.err.println("Couldn't convert result to JSON");
+                    }
                 }
+            }
+        };
+
+        scbReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context ctx, Intent intent) {
+                String result = intent.getStringExtra("speech-convert-done");
+                mTextConverted.setText(result);
+                parser.parseSentence(result);
             }
         };
     }
@@ -78,13 +99,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(bReceiver, new IntentFilter("parser"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(pbReceiver, new IntentFilter("parser"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(scbReceiver, new IntentFilter("speech-convert"));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(bReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(pbReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(scbReceiver);
     }
 
     @Override
@@ -107,11 +130,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mRecordText.setText("Press the red button to start recording");
             speech.stopListening();
-            mTextConverted.setText(speech.decodedSpeech);
-            Intent parserIntent = new Intent(this, ParserService.class);
-            parserIntent.putExtra("messageText", "anything");
-            startService(parserIntent);
-            Log.i(LOG_TAG, "started service");
         }
     }
 

@@ -1,4 +1,4 @@
-package c.example.speechtobsl;
+package c.example.speechtobsl.services;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -14,11 +15,13 @@ public class SpeechRecognitionListener implements RecognitionListener{
 
     private SpeechRecognizer speech;
     private Intent recogniserIntent;
-    public String decodedSpeech;
+    private String decodedSpeech;
+    private Context appCtx;
 
     private final String LOG_TAG = "BSL App";
 
     public SpeechRecognitionListener(Context ctx) {
+        appCtx = ctx;
         speech = SpeechRecognizer.createSpeechRecognizer(ctx);
         speech.setRecognitionListener(this);
         recogniserIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -71,6 +74,9 @@ public class SpeechRecognitionListener implements RecognitionListener{
         ArrayList<String> matches = data.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         decodedSpeech = matches.get(0);
         Log.i(LOG_TAG,"onResults" + decodedSpeech);
+        Intent localIntent = new Intent("speech-convert");
+        localIntent.putExtra("speech-convert-done", decodedSpeech);
+        LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
 
     }
 
