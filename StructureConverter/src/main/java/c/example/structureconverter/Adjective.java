@@ -1,4 +1,4 @@
-package c.example.structureconverter.datatypes;
+package c.example.structureconverter;
 
 import java.util.ArrayList;
 

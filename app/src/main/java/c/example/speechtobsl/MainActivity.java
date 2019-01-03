@@ -104,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         System.err.println("Couldn't convert result to JSON");
                     }
+                } else {
+                    String error = intent.getStringExtra("parser-fail");
+                    mRecordText.setText(error);
                 }
             }
         };

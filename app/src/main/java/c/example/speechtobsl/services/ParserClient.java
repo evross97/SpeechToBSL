@@ -65,7 +65,10 @@ public class ParserClient {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println("IT DIDNT WORK" + error.getMessage());
+                        Intent localIntent = new Intent("parser");
+                        localIntent.putExtra("parser-status", "fail");
+                        localIntent.putExtra("parser-fail", "Error: Couldn't get parse of sentence - " + error.getCause() + " : " + error.getMessage());
+                        LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
                     }
                 }
         );

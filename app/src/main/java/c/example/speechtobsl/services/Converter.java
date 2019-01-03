@@ -11,10 +11,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import c.example.structureconverter.datatypes.Adjective;
-import c.example.structureconverter.datatypes.Clause;
-import c.example.structureconverter.datatypes.NounPhrase;
-import c.example.structureconverter.datatypes.VerbPhrase;
+import c.example.structureconverter.Adjective;
+import c.example.structureconverter.Clause;
+import c.example.structureconverter.NounPhrase;
+import c.example.structureconverter.VerbPhrase;
 
 import static c.example.speechtobsl.services.Converter.POS.ADJ;
 import static c.example.speechtobsl.services.Converter.POS.ADV;
