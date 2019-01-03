@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
+import c.example.speechtobsl.services.Converter;
 import c.example.speechtobsl.services.ParserClient;
 import c.example.speechtobsl.services.SpeechRecognitionListener;
 
@@ -38,10 +39,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView mParsedSentence = null;
 
     private JSONObject jsonResult = null;
+    private String parsedText = null;
     private boolean mStartRecording = false;
 
     private SpeechRecognitionListener speech = null;
     private ParserClient parser = null;
+    private Converter converter = null;
+    private BroadcastReceiver cReceiver = null;
     private BroadcastReceiver pbReceiver = null;
     private BroadcastReceiver scbReceiver = null;
 
@@ -78,6 +82,18 @@ public class MainActivity extends AppCompatActivity {
 
         speech = new SpeechRecognitionListener(this);
         parser = new ParserClient(this);
+        converter = new Converter(this);
+
+        scbReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context ctx, Intent intent) {
+                String result = intent.getStringExtra("speech-convert-done");
+                parsedText = result;
+                mTextConverted.setText(result);
+                parser.parseSentence(result);
+            }
+        };
+
         pbReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -87,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                     String result = intent.getStringExtra("parser-done");
                     try {
                         jsonResult = new JSONObject(result);
-                        formatJSONResult();
+                        converter.convertSentence(jsonResult, parsedText);
                     } catch (JSONException e) {
                         System.err.println("Couldn't convert result to JSON");
                     }
@@ -95,12 +111,11 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        scbReceiver = new BroadcastReceiver() {
+        cReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context ctx, Intent intent) {
-                String result = intent.getStringExtra("speech-convert-done");
-                mTextConverted.setText(result);
-                parser.parseSentence(result);
+                String result = intent.getStringExtra("text-convert-done");
+                mRecordText.setText(result);
             }
         };
     }
@@ -108,15 +123,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(pbReceiver, new IntentFilter("parser"));
         LocalBroadcastManager.getInstance(this).registerReceiver(scbReceiver, new IntentFilter("speech-convert"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(pbReceiver, new IntentFilter("parser"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(cReceiver, new IntentFilter("text-convert"));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(pbReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(scbReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(pbReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(cReceiver);
     }
 
     @Override
@@ -142,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    //For demo
     private void formatJSONResult(){
 
         String a = "Time frame: "+findParts("nmod:tmod", 2);

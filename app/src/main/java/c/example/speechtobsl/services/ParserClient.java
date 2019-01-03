@@ -45,7 +45,6 @@ public class ParserClient {
 
 
     private void sendRequest(String text) {
-        //String text2 = "Where the boy see the girl with the telescope?";
         JSONObject params = new JSONObject();
         try {
             params.put("",text);
