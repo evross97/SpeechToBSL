@@ -73,7 +73,6 @@ public class SpeechRecognitionListener implements RecognitionListener{
     public void onResults(Bundle data) {
         ArrayList<String> matches = data.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         decodedSpeech = matches.get(0);
-        Log.i(LOG_TAG,"onResults" + decodedSpeech);
         Intent localIntent = new Intent("speech-convert");
         localIntent.putExtra("speech-convert-done", decodedSpeech);
         LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);

@@ -1,6 +1,9 @@
 package c.example.speechtobsl;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -17,8 +20,6 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Iterator;
 
 import c.example.speechtobsl.services.ParserClient;
 import c.example.speechtobsl.services.SpeechRecognitionListener;
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String status = intent.getStringExtra("parser-status");
-                Log.i(LOG_TAG, "I got something: " + status);
                 if(status.equals("done")) {
                     String result = intent.getStringExtra("parser-done");
                     try {
@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mRecordText.setText("Press the red button to start recording");
             speech.stopListening();
-            mTextConverted.setText(speech.decodedSpeech);
         }
     }
 
@@ -169,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
                         value = "False";
                     }
                 } else {
-                    System.out.println(sentence);
                     JSONArray deps = (JSONArray) sentence.get("basicDependencies");
                     for(int i=0; i < deps.length(); i++) {
                         JSONObject current = (JSONObject) deps.get(i);
