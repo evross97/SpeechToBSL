@@ -1,10 +1,12 @@
 package c.example.speechtobsl;
 
 import android.Manifest;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +14,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
+
+import c.example.speechtobsl.services.ParserClient;
+import c.example.speechtobsl.services.SpeechRecognitionListener;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,9 +32,16 @@ public class MainActivity extends AppCompatActivity {
     private Button mRecordButton = null;
     private TextView mRecordText = null;
     private TextView mTextConverted = null;
+    private TextView mParsedSentence = null;
+
+    private JSONObject jsonResult = null;
     private boolean mStartRecording = false;
 
     private SpeechRecognitionListener speech = null;
+    private ParserClient parser = null;
+    private BroadcastReceiver pbReceiver = null;
+    private BroadcastReceiver scbReceiver = null;
+
 
     private boolean permissionToRecordAccepted = false;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
@@ -40,8 +57,11 @@ public class MainActivity extends AppCompatActivity {
         mRecordButton = findViewById(R.id.recordButton);
         mRecordText = findViewById(R.id.record_text);
         mTextConverted = findViewById(R.id.text_converted);
+        mParsedSentence = findViewById(R.id.parsed_sentence);
 
         mRecordText.setText("Press the red button to start recording");
+        mParsedSentence.setText("");
+        mTextConverted.setText("");
         mRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,7 +74,46 @@ public class MainActivity extends AppCompatActivity {
         });
 
         speech = new SpeechRecognitionListener(this);
-        mTextConverted.setText(speech.decodedSpeech);
+        parser = new ParserClient(this);
+        pbReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String status = intent.getStringExtra("parser-status");
+                Log.i(LOG_TAG, "I got something: " + status);
+                if(status.equals("done")) {
+                    String result = intent.getStringExtra("parser-done");
+                    try {
+                        jsonResult = new JSONObject(result);
+                        formatJSONResult();
+                    } catch (JSONException e) {
+                        System.err.println("Couldn't convert result to JSON");
+                    }
+                }
+            }
+        };
+
+        scbReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context ctx, Intent intent) {
+                String result = intent.getStringExtra("speech-convert-done");
+                mTextConverted.setText(result);
+                parser.parseSentence(result);
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(pbReceiver, new IntentFilter("parser"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(scbReceiver, new IntentFilter("speech-convert"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(pbReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(scbReceiver);
     }
 
     @Override
@@ -79,6 +138,61 @@ public class MainActivity extends AppCompatActivity {
             speech.stopListening();
             mTextConverted.setText(speech.decodedSpeech);
         }
+    }
+
+    private void formatJSONResult(){
+
+        String a = "Time frame: "+findParts("nmod:tmod", 2);
+        String b = "Negation: "+findParts("neg", 1);
+        String c = "Location: "+findParts("case", 1);
+        String d = "Object: "+findParts("dobj", 2);
+        String e = "Subject: "+findParts("nsubj", 2);
+        String f = "Verb: "+findParts("nsubj", 1);
+        String g = "Question: "+findParts("WRB", 3);
+        String h = "Possession: "+findParts("nmod:poss", 2);
+        String i = "Adjectives: "+findParts("amod", 2);
+        mRecordText.setText("");
+        mParsedSentence.setText(a + "\n" + b +"\n" + c + "\n" + d + "\n" + e + "\n" + f + "\n" + g + "\n" + h + "\n" + i);
+    }
+
+    private String findParts(String key, Integer parts) {
+        String value = "";
+
+        try {
+                JSONArray sentences = (JSONArray) jsonResult.get("sentences");
+                JSONObject sentence = (JSONObject) sentences.get(0);
+                if(parts.equals(3)) {
+                    String parse = (String) sentence.get("parse");
+                    if(parse.contains("WRB")) {
+                        value = "True";
+                    } else {
+                        value = "False";
+                    }
+                } else {
+                    System.out.println(sentence);
+                    JSONArray deps = (JSONArray) sentence.get("basicDependencies");
+                    for(int i=0; i < deps.length(); i++) {
+                        JSONObject current = (JSONObject) deps.get(i);
+                        if(current.getString("dep").equals(key)) {
+                            switch (parts) {
+                                case 1:
+                                    value = current.getString("governorGloss");
+                                    break;
+                                case 2:
+                                    value = current.getString("dependentGloss");
+                                    break;
+                                default:
+                                    value = current.toString();
+                                    break;
+                            }
+                        }
+                    }
+                }
+            } catch(JSONException e) {
+                System.err.println(e.getMessage());
+        }
+
+        return value;
     }
 
 }
