@@ -21,8 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Iterator;
-
 import c.example.speechtobsl.services.Converter;
 import c.example.speechtobsl.services.ParserClient;
 import c.example.speechtobsl.services.SpeechRecognitionListener;
@@ -98,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String status = intent.getStringExtra("parser-status");
-                Log.i(LOG_TAG, "I got something: " + status);
                 if(status.equals("done")) {
                     String result = intent.getStringExtra("parser-done");
                     try {
@@ -190,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
                         value = "False";
                     }
                 } else {
-                    System.out.println(sentence);
                     JSONArray deps = (JSONArray) sentence.get("basicDependencies");
                     for(int i=0; i < deps.length(); i++) {
                         JSONObject current = (JSONObject) deps.get(i);

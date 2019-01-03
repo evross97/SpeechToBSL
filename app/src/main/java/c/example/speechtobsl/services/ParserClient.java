@@ -31,8 +31,6 @@ public class ParserClient {
     public void parseSentence(String text) {
         Intent localIntent = new Intent("parser");
         try {
-
-            Log.i(LOG_TAG, text);
             localIntent.putExtra("parser-status", "going");
             sendRequest(text);
 
@@ -48,13 +46,9 @@ public class ParserClient {
         JSONObject params = new JSONObject();
         try {
             params.put("",text);
-
-            System.out.println("Added params");
         } catch (JSONException e) {
             System.err.println("Couldn't create params");
         }
-
-        System.out.println("About to send request.");
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST,
                 BASE_URL,
@@ -62,7 +56,6 @@ public class ParserClient {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        System.out.println("I DID IT: " + response);
                         Intent localIntent = new Intent("parser");
                         localIntent.putExtra("parser-status", "done");
                         localIntent.putExtra("parser-done", response.toString());
@@ -76,8 +69,6 @@ public class ParserClient {
                     }
                 }
         );
-        System.out.println("About to add to queue" + request.toString());
-
         queue.add(request);
     }
 }
