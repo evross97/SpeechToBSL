@@ -16,16 +16,7 @@ import c.example.structureconverter.Clause;
 import c.example.structureconverter.NounPhrase;
 import c.example.structureconverter.VerbPhrase;
 
-import static c.example.speechtobsl.services.Converter.POS.ADJ;
-import static c.example.speechtobsl.services.Converter.POS.ADV;
-import static c.example.speechtobsl.services.Converter.POS.CONN;
-import static c.example.speechtobsl.services.Converter.POS.DET;
-import static c.example.speechtobsl.services.Converter.POS.MDL;
-import static c.example.speechtobsl.services.Converter.POS.NA;
-import static c.example.speechtobsl.services.Converter.POS.NOUN;
-import static c.example.speechtobsl.services.Converter.POS.PREP;
-import static c.example.speechtobsl.services.Converter.POS.QTN;
-import static c.example.speechtobsl.services.Converter.POS.VRB;
+import static c.example.speechtobsl.services.Converter.POS.*;
 
 public class Converter {
 
@@ -65,12 +56,12 @@ public class Converter {
     private ArrayList<JSONObject> parse;
     private ArrayList<String> englishText;
 
-    private ArrayList<Clause> clauses;
+    private ArrayList<String> sentence;
 
 
     public Converter(Context ctx) {
         this.appCtx = ctx;
-        this.clauses = new ArrayList<>();
+        this.sentence = new ArrayList<>();
         this.POSTags = new ArrayList<>();
         this.parse = new ArrayList<>();
     }
@@ -78,10 +69,10 @@ public class Converter {
     public void convertSentence(JSONObject englishParsedText, String originalText) {
         this.POSTags.clear();
         this.parse.clear();
-        this.clauses.clear();
+        this.sentence.clear();
         this.extractData(englishParsedText, originalText);
         this.createClauses();
-        String BSLText = mergeClauses();
+        String BSLText = this.sentence.toString();
         System.out.println(BSLText);
         Intent localIntent = new Intent("text-convert");
         localIntent.putExtra("text-convert-done", BSLText);
@@ -121,7 +112,7 @@ public class Converter {
         Clause currentClause = new Clause(clauseIndex);
         for(int i=0; i < this.englishText.size(); i++) {
             String word = this.englishText.get(i);
-            POS tag = this.getTag(word);
+            POS tag = this.getGeneralTag(word);
             switch (tag) {
                 case NOUN:
                     NounPhrase newNP = this.createNP(word);
@@ -143,16 +134,15 @@ public class Converter {
                     currentClause.setQuestion(word);
                     break;
                 case CONN:
-                    currentClause.setNPs(NPs);
-                    if(VPs.size() > 0) {
-                        currentClause.setVPs(VPs);
-                    } else {
-                        currentClause.setVPs(this.prepForVP(preps));
-                    }
-                    currentClause = this.checkForTense(currentClause);
-                    this.clauses.add(currentClause);
+                    this.sentence.addAll(this.addToClause(currentClause, NPs, VPs, preps).toArrayString());
+                    System.out.println("Clause: " + currentClause.toArrayString());
                     clauseIndex+=1;
                     currentClause = new Clause(clauseIndex);
+                    NPs.clear();
+                    VPs.clear();
+                    preps.clear();
+                    System.out.println("New Clause: " + currentClause.toArrayString());
+
                     currentClause.setConnector(word);
                     if(word.equals("that")) {
                         currentClause.setBeforeConnector(true);
@@ -163,62 +153,83 @@ public class Converter {
             }
 
         }
-        currentClause.setNPs(NPs);
+        this.sentence.addAll(this.addToClause(currentClause, NPs, VPs, preps).toArrayString());
+        System.out.println("Clause: " + currentClause.toArrayString());
+    }
+
+    private Clause addToClause(Clause clause, ArrayList<NounPhrase> NPs, ArrayList<VerbPhrase> VPs, ArrayList<String> preps) {
+        clause.setNPs(NPs);
         if(VPs.size() > 0) {
-            currentClause.setVPs(VPs);
+            clause.setVPs(VPs);
         } else {
-            currentClause.setVPs(this.prepForVP(preps));
+            clause.setVPs(this.prepForVP(preps));
         }
-        currentClause = this.checkForTense(currentClause);
-        this.clauses.add(currentClause);
+        clause = this.checkForTense(clause);
+        return clause;
     }
 
-    private String mergeClauses() {
-        ArrayList<String> sentence = new ArrayList<>();
-        this.clauses.forEach((clause) -> sentence.addAll(clause.toArrayString()));
-        return sentence.toString();
-    }
-
-    private POS getTag(String word) {
-        POS finalTag = NA;
-        try {
-            for(int i = 0; i < this.POSTags.size(); i++) {
-                JSONObject currentTag = this.POSTags.get(i);
+    private JSONObject getExactTag(String word) {
+        JSONObject finalTag = new JSONObject();
+        for(int i = 0; i < this.POSTags.size(); i++) {
+            JSONObject currentTag = this.POSTags.get(i);
+            try {
                 String name = currentTag.getString("word");
-                if(name.equals(word)) {
-                    String pos = currentTag.getString("pos");
-                    if(pos.equals("CC")) {
-                        finalTag = CONN;
-                    }
-                    if(pos.equals("DT")|| pos.contains("PRP")) {
-                        finalTag = DET;
-                    }
-                    if(pos.contains("JJ")) {
-                        finalTag = ADJ;
-                    }
-                    if(pos.equals("IN") || pos.equals("TO")) {
-                        finalTag = PREP;
-                    }
-                    if(pos.equals("MD")) {
-                        finalTag = MDL;
-                    }
-                    if(pos.contains("NN") || pos.equals("PRP")) {
-                        finalTag = NOUN;
-                    }
-                    if(pos.startsWith("RB")) {
-                        finalTag = ADV;
-                    }
-                    if(pos.contains("VB")) {
-                        finalTag = VRB;
-                    }
-                    if(pos.startsWith("W")) {
-                        finalTag = QTN;
-                    }
+                if (name.equals(word)) {
+                    finalTag = currentTag;
                     break;
                 }
+            } catch(JSONException e) {
+                System.out.println("Can't get exact tag for " + word + ": " + e.getMessage());
+            }
+        }
+        return finalTag;
+    }
+
+    private POS getGeneralTag(String word) {
+        POS finalTag = NA;
+        try {
+            JSONObject tag = this.getExactTag(word);
+            String ner = tag.getString("ner");
+            if(ner.equals("DATE")) {
+                finalTag = TIM;
+            } else {
+                String pos = tag.getString("pos");
+                if(pos.equals("CC")) {
+                    finalTag = CONN;
+                }
+                if(pos.equals("DT")|| pos.contains("PRP")) {
+                    finalTag = DET;
+                }
+                if(pos.contains("JJ")) {
+                    finalTag = ADJ;
+                }
+                if(pos.equals("IN") || pos.equals("TO")) {
+                    finalTag = PREP;
+                }
+                if(pos.equals("MD")) {
+                    finalTag = MDL;
+                }
+                if(pos.contains("NN") || pos.equals("PRP")) {
+                    finalTag = NOUN;
+                }
+                if(pos.startsWith("RB")) {
+                    finalTag = ADV;
+                }
+                if(pos.contains("VB")) {
+                    finalTag = VRB;
+                }
+                if(pos.startsWith("W")) {
+                    if(englishText.get(0).equals(word)) {
+                        finalTag = QTN;
+                    } else {
+                        finalTag = CONN;
+                    }
+                    System.out.println(finalTag);
+                }
+
             }
         } catch(JSONException e) {
-            System.out.println("Can't get tag for " + word + ": " + e.getMessage());
+            System.out.println("Can't get general tag for " + word + ": " + e.getMessage());
         }
         return finalTag;
     }
@@ -248,21 +259,15 @@ public class Converter {
         }
         //Plural
         Boolean plural = false;
-        for(int k = 0; k < this.POSTags.size(); k++) {
-            JSONObject currentTag = this.POSTags.get(k);
-            try {
-                String name = currentTag.getString("word");
-                if (name.equals(noun)) {
-                    String pos = currentTag.getString("pos");
-                    if (pos.equals("NNS") || pos.equals("NNPS")) {
-                        plural = true;
-                        NP.setNoun(this.getSingular(noun));
-                        break;
-                    }
-                }
-            } catch(JSONException e) {
-                System.out.println("Unable to check if noun is plural: " + e.getMessage());
+        try{
+            JSONObject currentTag = this.getExactTag(noun);
+            String pos = currentTag.getString("pos");
+            if (pos.equals("NNS") || pos.equals("NNPS")) {
+                plural = true;
+                NP.setNoun(this.getSingular(noun));
             }
+        } catch(JSONException e) {
+            System.out.println("Unable to check if noun is plural: " + e.getMessage());
         }
         NP.setPlural(plural);
 
@@ -285,7 +290,7 @@ public class Converter {
             }
         }
         NP.setSubject(nsubj);
-        System.out.println(NP.toArrayString());
+        System.out.println("NP: " + NP.toArrayString());
         return NP;
     }
 
@@ -300,7 +305,7 @@ public class Converter {
         VP.setPrepVerb(isPrep);
         //Adverbs
         VP.setAdverbs(this.findLinks(verb, ADV));
-        System.out.println(VP.toArrayString());
+        System.out.println("VP: " + VP.toArrayString());
         return VP;
     }
 
@@ -318,7 +323,7 @@ public class Converter {
                 }
 
             } catch(JSONException e) {
-                System.out.println("Failed to extract governor from parse: " + e.getMessage());
+                System.out.println("Failed to extract dependencies from parse: " + e.getMessage());
             }
         }
         //check which related words are of the correct type
@@ -329,12 +334,12 @@ public class Converter {
                 if(currentName.equals(word)) {
                     currentName = currentLink.getString("governorGloss");
                 }
-                POS tag = this.getTag(currentName);
+                POS tag = this.getGeneralTag(currentName);
                 if(tag.equals(typeWanted)) {
                     linkedWords.add(currentName);
                 }
             } catch(JSONException e) {
-                System.out.println("Failed to extract dependent fro parse: " + e.getMessage());
+                System.out.println("Failed to extract relevant dependencies from parse: " + e.getMessage());
             }
         }
 
@@ -356,14 +361,8 @@ public class Converter {
     private String getSingular(String plural) {
         String sing = "";
         try {
-            for(int i = 0; i < this.POSTags.size(); i++) {
-                JSONObject currentTag = this.POSTags.get(i);
-                String name = currentTag.getString("word");
-                if (name.equals(plural)) {
-                    sing = currentTag.getString("lemma");
-                    break;
-                }
-            }
+            JSONObject currentTag = this.getExactTag(plural);
+            sing = currentTag.getString("lemma");
         } catch (JSONException e) {
             System.out.println("Failed to get singular of noun: " + e.getMessage());
         }
@@ -373,7 +372,22 @@ public class Converter {
 
     private Clause checkForTense(Clause clause) {
         if(clause.getTimeFrame().equals("")) {
-
+            Boolean past = false;
+            try {
+                for(VerbPhrase VP: clause.getVPs()) {
+                    JSONObject currentTag = this.getExactTag(VP.getVerb());
+                    String pos = currentTag.getString("pos");
+                    if(pos.equals("VBD") | pos.equals("VBN")) {
+                        past = true;
+                        break;
+                    }
+                }
+            } catch (JSONException e) {
+                System.out.println("Failed to check tense of verbs: " + e.getMessage());
+            }
+            if(past) {
+                clause.setTimeFrame("BEFORE");
+            }
         }
         return clause;
     }

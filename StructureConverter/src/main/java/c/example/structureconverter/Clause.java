@@ -22,15 +22,6 @@ public class Clause {
         this.connector = "";
         this.beforeConnector = false;
     }
-    public Clause(Integer nIndex, ArrayList<NounPhrase> nNPs, ArrayList<VerbPhrase> nVPs,String nTimeFrame, String nQuestion, String nConnector, Boolean nBeforeConnector) {
-        this.index = nIndex;
-        this.NPs = nNPs;
-        this.VPs = nVPs;
-        this.timeFrame = nTimeFrame;
-        this.question = nQuestion;
-        this.connector = nConnector;
-        this.beforeConnector = nBeforeConnector;
-    }
 
     public ArrayList<NounPhrase> getNPs() {
         return NPs;

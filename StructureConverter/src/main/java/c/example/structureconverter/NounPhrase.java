@@ -94,7 +94,9 @@ public class NounPhrase {
         ArrayList<String> NP = new ArrayList<>();
         //preposition
         if(!this.preposition.equals("")) {
-            NP.add(this.preposition);
+            if(!this.preposition.equals("for") && !this.preposition.equals("of")) {
+                NP.add(this.preposition);
+            }
         }
         //possession
         if(!this.determiner.equals("")) {
