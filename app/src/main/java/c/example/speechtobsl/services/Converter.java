@@ -84,7 +84,7 @@ public class Converter {
         try {
             JSONArray sentences = (JSONArray) englishParsedText.get("sentences");
             JSONObject sentence = (JSONObject) sentences.get(0);
-            System.out.println(sentence.toString(2));
+            //System.out.println(sentence.toString(2));
             this.POSTags = this.toArrayList((JSONArray)sentence.get("tokens"));
             this.parse = this.toArrayList((JSONArray)sentence.get("enhancedPlusPlusDependencies"));
         } catch(JSONException e) {
@@ -135,13 +135,13 @@ public class Converter {
                     break;
                 case CONN:
                     this.sentence.addAll(this.addToClause(currentClause, NPs, VPs, preps).toArrayString());
-                    System.out.println("Clause: " + currentClause.toArrayString());
+                    //System.out.println("Clause: " + currentClause.toArrayString());
                     clauseIndex+=1;
                     currentClause = new Clause(clauseIndex);
                     NPs.clear();
                     VPs.clear();
                     preps.clear();
-                    System.out.println("New Clause: " + currentClause.toArrayString());
+                    //System.out.println("New Clause: " + currentClause.toArrayString());
 
                     currentClause.setConnector(word);
                     if(word.equals("that")) {
@@ -154,7 +154,7 @@ public class Converter {
 
         }
         this.sentence.addAll(this.addToClause(currentClause, NPs, VPs, preps).toArrayString());
-        System.out.println("Clause: " + currentClause.toArrayString());
+        //System.out.println("Clause: " + currentClause.toArrayString());
     }
 
     private Clause addToClause(Clause clause, ArrayList<NounPhrase> NPs, ArrayList<VerbPhrase> VPs, ArrayList<String> preps) {
@@ -224,7 +224,7 @@ public class Converter {
                     } else {
                         finalTag = CONN;
                     }
-                    System.out.println(finalTag);
+                    //System.out.println(finalTag);
                 }
 
             }
@@ -290,7 +290,7 @@ public class Converter {
             }
         }
         NP.setSubject(nsubj);
-        System.out.println("NP: " + NP.toArrayString());
+        //System.out.println("NP: " + NP.toArrayString());
         return NP;
     }
 
@@ -305,7 +305,7 @@ public class Converter {
         VP.setPrepVerb(isPrep);
         //Adverbs
         VP.setAdverbs(this.findLinks(verb, ADV));
-        System.out.println("VP: " + VP.toArrayString());
+        //System.out.println("VP: " + VP.toArrayString());
         return VP;
     }
 

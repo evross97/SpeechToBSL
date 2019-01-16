@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import c.example.speechtobsl.services.Converter;
 import c.example.speechtobsl.services.ParserClient;
+import c.example.speechtobsl.services.SignDatabase;
 import c.example.speechtobsl.services.SpeechRecognitionListener;
 
 
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private SpeechRecognitionListener speech = null;
     private ParserClient parser = null;
     private Converter converter = null;
+    private SignDatabase database = null;
+
     private BroadcastReceiver cReceiver = null;
     private BroadcastReceiver pbReceiver = null;
     private BroadcastReceiver scbReceiver = null;
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         speech = new SpeechRecognitionListener(this);
         parser = new ParserClient(this);
         converter = new Converter(this);
+        database = new SignDatabase(this);
 
         scbReceiver = new BroadcastReceiver() {
             @Override
@@ -116,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context ctx, Intent intent) {
                 String result = intent.getStringExtra("text-convert-done");
                 mRecordText.setText(result);
+
             }
         };
     }
