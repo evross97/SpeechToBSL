@@ -67,6 +67,8 @@ public class ParserClient {
                     public void onErrorResponse(VolleyError error) {
                         Intent localIntent = new Intent("parser");
                         localIntent.putExtra("parser-status", "fail");
+                        //volley timeout error????
+                        System.out.println(error);
                         localIntent.putExtra("parser-fail", "Error: Couldn't get parse of sentence - " + error.getCause() + " : " + error.getMessage());
                         LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
                     }
