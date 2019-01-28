@@ -16,7 +16,6 @@ public class ParserClient {
     private Intent localIntent = new Intent("parser");
 
     public ParserClient(Context ctx) {
-        super();
         appCtx = ctx;
     }
 
@@ -24,7 +23,7 @@ public class ParserClient {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                runParse(params); // call your network method here
+                runParse(params);
             }
         }).start();
     }
@@ -47,7 +46,8 @@ public class ParserClient {
             connection.setDoOutput(true);
             DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
             dos.writeBytes(msg);
-            dos.flush(); dos.close();
+            dos.flush();
+            dos.close();
 
             //Response - input
             BufferedReader bf = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -55,13 +55,11 @@ public class ParserClient {
             String line;
 
             while ((line=bf.readLine())!=null) {
-                System.out.println(line);
                 sb.append(line);
             }
             bf.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
             localIntent.putExtra("parser-status", "fail");
             localIntent.putExtra("parser-fail", "Error: Couldn't get parse of sentence - " + e.getMessage());
             LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
