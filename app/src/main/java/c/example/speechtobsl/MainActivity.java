@@ -21,9 +21,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import c.example.speechtobsl.services.Converter;
+import c.example.speechtobsl.services.ImageRetriever;
 import c.example.speechtobsl.services.ParserClient;
+import c.example.speechtobsl.services.SignDatabase;
 import c.example.speechtobsl.services.SpeechRecognitionListener;
+import c.example.speechtobsl.utils.Image;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -35,14 +41,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView mRecordText = null;
     private TextView mTextConverted = null;
     private TextView mParsedSentence = null;
-
-    private JSONObject jsonResult = null;
-    private String parsedText = null;
     private boolean mStartRecording = false;
+
+    private String convertedSpeech = null;
+    private String BSLSentence = null;
 
     private SpeechRecognitionListener speech = null;
     private ParserClient parser = null;
     private Converter converter = null;
+
     private BroadcastReceiver cReceiver = null;
     private BroadcastReceiver pbReceiver = null;
     private BroadcastReceiver scbReceiver = null;
@@ -50,13 +57,14 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean permissionToRecordAccepted = false;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
+    private Intent signViewer = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        signViewer = new Intent(this, SignViewer.class);
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         mRecordButton = findViewById(R.id.recordButton);
@@ -86,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context ctx, Intent intent) {
                 String result = intent.getStringExtra("speech-convert-done");
-                parsedText = result;
+                convertedSpeech = result;
                 mTextConverted.setText(result);
                 parser.parse(new String[]{
                         "http://192.168.0.15",
@@ -103,8 +111,8 @@ public class MainActivity extends AppCompatActivity {
                 if(status.equals("done")) {
                     String result = intent.getStringExtra("parser-done");
                     try {
-                        jsonResult = new JSONObject(result);
-                        converter.convertSentence(jsonResult, parsedText);
+                        JSONObject jsonResult = new JSONObject(result);
+                        converter.convertSentence(jsonResult, convertedSpeech);
                     } catch (JSONException e) {
                         System.err.println("Couldn't convert result to JSON");
                     }
@@ -120,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context ctx, Intent intent) {
                 String result = intent.getStringExtra("text-convert-done");
                 mRecordText.setText(result);
+                BSLSentence = result;
+                signViewer.putExtra("bsl-sentence", BSLSentence);
+                startActivity(signViewer);
             }
         };
     }
@@ -163,8 +174,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     //For demo
+    /**
     private void formatJSONResult(){
 
         String a = "Time frame: "+findParts("nmod:tmod", 2);
@@ -218,5 +229,6 @@ public class MainActivity extends AppCompatActivity {
 
         return value;
     }
+     **/
 
 }

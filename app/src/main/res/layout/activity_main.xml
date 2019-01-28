@@ -26,8 +26,11 @@
         android:id="@+id/record_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_above="@+id/parsed_sentence"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-300dp"
         android:text="TextView"
+        android:textSize="18sp"
         tools:text="Press the red button to start recording" />
 
     <TextView
@@ -65,6 +68,16 @@
 
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="134dp"
+        android:text="Speech To BSL"
+        android:textSize="36sp" />
 
 
 </RelativeLayout>
