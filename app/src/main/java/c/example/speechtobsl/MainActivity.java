@@ -96,7 +96,11 @@ public class MainActivity extends AppCompatActivity {
                 String result = intent.getStringExtra("speech-convert-done");
                 convertedSpeech = result;
                 mTextConverted.setText(result);
-                parser.parseSentence(result);
+                parser.parse(new String[]{
+                        "http://192.168.0.15",
+                        "9000",
+                        result}
+                );
             }
         };
 

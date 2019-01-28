@@ -3,77 +3,69 @@ package c.example.speechtobsl.services;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class ParserClient {
 
-    private final String LOG_TAG = "BSL-client-parser";
-    private static final String BASE_URL = "http://corenlp.run";
-    RequestQueue queue;
-    Context appCtx;
+    private Context appCtx;
+    private Intent localIntent = new Intent("parser");
 
     public ParserClient(Context ctx) {
         appCtx = ctx;
-        queue = Volley.newRequestQueue(appCtx.getApplicationContext());
     }
 
-    public void parseSentence(String text) {
-        Intent localIntent = new Intent("parser");
-        try {
-            localIntent.putExtra("parser-status", "going");
-            sendRequest(text);
+    public void parse(String[] params) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runParse(params);
+            }
+        }).start();
+    }
 
-        } catch (NullPointerException e) {
-            localIntent.putExtra("parser-status", "failed-no message present");
+    private void runParse(String[] params) {
+        String IP = params[0];
+        String port = params[1];
+        String msg = params[2];
+        String props = "/?properties=%7B%22annotators%22%3A%20%22tokenize%2Cssplit%2Cpos%2Cner%2Cdepparse%2Copenie%22%2C%20%22date%22%3A%20%222019-01-26T16%3A46%3A19%22%7D";
+        StringBuilder sb = new StringBuilder();
+        try {
+            URL url = new URL(IP+":"+port+props);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            //Request header
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+            //Send post request
+            connection.setDoOutput(true);
+            DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
+            dos.writeBytes(msg);
+            dos.flush();
+            dos.close();
+
+            //Response - input
+            BufferedReader bf = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            String line;
+
+            while ((line=bf.readLine())!=null) {
+                sb.append(line);
+            }
+            bf.close();
+
+        } catch (Exception e) {
+            localIntent.putExtra("parser-status", "fail");
+            localIntent.putExtra("parser-fail", "Error: Couldn't get parse of sentence - " + e.getMessage());
+            LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
         }
+        localIntent.putExtra("parser-status", "done");
+        localIntent.putExtra("parser-done", sb.toString());
         LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
-    }
-
-
-
-    private void sendRequest(String text) {
-        JSONObject params = new JSONObject();
-        try {
-            params.put("",text);
-        } catch (JSONException e) {
-            System.err.println("Couldn't create params");
-        }
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST,
-                BASE_URL,
-                params,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Intent localIntent = new Intent("parser");
-                        localIntent.putExtra("parser-status", "done");
-                        localIntent.putExtra("parser-done", response.toString());
-                        LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Intent localIntent = new Intent("parser");
-                        localIntent.putExtra("parser-status", "fail");
-                        //volley timeout error????
-                        System.out.println(error);
-                        localIntent.putExtra("parser-fail", "Error: Couldn't get parse of sentence - " + error.getCause() + " : " + error.getMessage());
-                        LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
-                    }
-                }
-        );
-        queue.add(request);
     }
 }
