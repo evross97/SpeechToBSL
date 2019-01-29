@@ -19,7 +19,7 @@ public class ImageRetriever {
     public ArrayList<Image> getImageSentence(ArrayList<String> sentence) {
         ArrayList<Image> images = new ArrayList<>();
         for(String word : sentence) {
-            images.add(db.getSign(word));
+            images.addAll(db.getSigns(word));
         }
         return images;
     }

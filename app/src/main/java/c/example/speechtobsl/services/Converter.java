@@ -189,7 +189,7 @@ public class Converter {
         return finalTag;
     }
 
-    private POS getGeneralTag(String word) {
+    public POS getGeneralTag(String word) {
         POS finalTag = NA;
         try {
             JSONObject tag = this.getExactTag(word);
