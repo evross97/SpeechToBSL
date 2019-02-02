@@ -5,16 +5,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
-
-import java.io.InputStream;
-import java.sql.Blob;
 import java.util.ArrayList;
 
 import c.example.speechtobsl.utils.Image;
 
 public class SignDatabase extends SQLiteAssetHelper {
 
-    private static final String dbName = "signs_db";
+    private static final String dbName = "sign_db";
     private static final Integer dbVersion = 1;
     private SQLiteDatabase db;
     private Cursor cursor;
@@ -43,7 +40,7 @@ public class SignDatabase extends SQLiteAssetHelper {
                     break;
                 }
             }
-            if(signFound) {
+            if(!signFound) {
                 System.out.println("Need fingerspelling");
                 finalSigns = this.fingerSpellWord(word);
             }
@@ -55,11 +52,10 @@ public class SignDatabase extends SQLiteAssetHelper {
     }
 
     private Image queryDatabase(String word) {
-        Image sign = new Image(null, word);
-        cursor = db.rawQuery("SELECT Image FROM images " +
-                        "INNER JOIN synonyms ON images.ImageId = synonyms.ImageId " +
-                        "WHERE synonyms.Synonym = ?",
-                new String[]{word});
+        String upperWord = word.toUpperCase();
+        Image sign = new Image(null, upperWord);
+        cursor = db.rawQuery("SELECT Image FROM images WHERE images.Description = ?",
+                new String[]{upperWord});
         if(cursor.moveToFirst()) {
             sign.setImage(cursor.getBlob(0));
         }
@@ -70,8 +66,16 @@ public class SignDatabase extends SQLiteAssetHelper {
         ArrayList<Image> letterSigns = new ArrayList<>();
         String[] letters = word.split("");
         for(String letter : letters) {
-            letterSigns.add(this.queryDatabase(letter));
+            if(!letter.equals("")) {
+                Image sign = this.queryDatabase(letter);
+                sign.setDesc(word.toUpperCase());
+                letterSigns.add(sign);
+                Image emptySign = new Image(null," ");
+                letterSigns.add(emptySign);
+            }
         }
+        Image emptyEndSign = new Image(null,"endWord");
+        letterSigns.add(emptyEndSign);
         return letterSigns;
     }
 }
