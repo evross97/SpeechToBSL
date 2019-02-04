@@ -3,6 +3,8 @@ package c.example.speechtobsl.services;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,10 +16,13 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.item.IIndexWord;
+import edu.mit.jwi.item.ISynset;
+import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 
 public class WordNet {
@@ -28,23 +33,15 @@ public class WordNet {
 
     public WordNet(Context ctx) {
         this.appCtx = ctx;
+        StringBuffer fpath = new StringBuffer(400);
+        fpath.append(appCtx.getExternalFilesDir(null).toString()
+                + "/dict");
+        File f = new File(fpath.toString());
+        dict = new Dictionary(f);
         try {
-            AssetManager assets = this.appCtx.getAssets();
-            InputStream in = assets.open("dict");
-            /**System.out.println("HEEELLLOOO" + assets.list("")[1]);
-            Uri path = Uri.parse("file:///android_asset/dict");
-            String fileDir = path.toString();
-            URL url = new URL("file",null,fileDir);**/
-
-            byte[] buffer = new byte[in.available()];
-            in.read(buffer);
-
-            File targetFile = new File("file:///android_asset/dict");
-            OutputStream outStream = new FileOutputStream(targetFile);
-            outStream.write(buffer);
-            dict = new Dictionary(targetFile);
-        } catch(IOException e) {
-            System.out.println("Unable to find dictionary files");
+            dict.open();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -52,13 +49,14 @@ public class WordNet {
         ArrayList<String> syns = new ArrayList<>();
         //Converter converter = new Converter();
         try {
-            dict.open();
-            //POS myPOS =
-            IIndexWord idxWords = dict.getIndexWord(word, edu.mit.jwi.item.POS.NOUN);
-            for(IWordID wordID : idxWords.getWordIDs()) {
-                System.out.println("Syns: " + dict.getWord(wordID).toString());
+            IIndexWord idxWord = dict.getIndexWord(word.toLowerCase(), edu.mit.jwi.item.POS.NOUN);
+            IWordID iWordID = idxWord.getWordIDs().get(0);
+            IWord wordMeaning = dict.getWord(iWordID);
+            ISynset synsWords = wordMeaning.getSynset();
+            for(IWord synonym: synsWords.getWords()) {
+                syns.add(synonym.getLemma());
             }
-        } catch(IOException e) {
+        } catch(Exception e) {
             e.printStackTrace();
             System.out.println("Unable to open dictionary");
         }
