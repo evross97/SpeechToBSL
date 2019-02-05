@@ -46,19 +46,31 @@ public class SignViewer extends AppCompatActivity {
 
     private void nextImage() {
         System.out.println(currentImageIndex);
+        Integer delayTime = 1000;
         if(currentImageIndex < this.BSLImages.size()) {
             Image currentImage = this.BSLImages.get(currentImageIndex);
-            System.out.println(currentImage.getImage().length + " " + currentImage.getDesc());
-            Bitmap bitmap = BitmapFactory.decodeByteArray(currentImage.getImage(),0,currentImage.getImage().length);
-            pic.setImageBitmap(bitmap);
-            desc.setText(currentImage.getDesc());
+            if(currentImage.getImage() != null) {
+                System.out.println(currentImage.getImage().length + " " + currentImage.getDesc());
+                Bitmap bitmap = BitmapFactory.decodeByteArray(currentImage.getImage(),0,currentImage.getImage().length);
+                pic.setImageBitmap(bitmap);
+                desc.setText(currentImage.getDesc());
+            } else {
+                if(currentImage.getDesc().equals("endWord")) {
+                    delayTime = 100;
+                }
+                else {
+                    delayTime = 10;
+                }
+                pic.setImageResource(android.R.color.white);
+                desc.setText(" ");
+            }
             currentImageIndex++;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     nextImage();
                 }
-            }, 1000);
+            }, delayTime);
         }
     }
 }

@@ -16,20 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import c.example.speechtobsl.services.Client;
 import c.example.speechtobsl.services.Converter;
-import c.example.speechtobsl.services.ImageRetriever;
-import c.example.speechtobsl.services.ParserClient;
-import c.example.speechtobsl.services.SignDatabase;
 import c.example.speechtobsl.services.SpeechRecognitionListener;
-import c.example.speechtobsl.utils.Image;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -47,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private String BSLSentence = null;
 
     private SpeechRecognitionListener speech = null;
-    private ParserClient parser = null;
+    private Client parser = null;
     private Converter converter = null;
 
     private BroadcastReceiver cReceiver = null;
@@ -87,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         speech = new SpeechRecognitionListener(this);
-        parser = new ParserClient(this);
+        parser = new Client(this);
         converter = new Converter(this);
 
         scbReceiver = new BroadcastReceiver() {
@@ -96,20 +88,27 @@ public class MainActivity extends AppCompatActivity {
                 String result = intent.getStringExtra("speech-convert-done");
                 convertedSpeech = result;
                 mTextConverted.setText(result);
-                parser.parse(new String[]{
-                        "http://192.168.0.15",
-                        "9000",
-                        result}
-                );
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        parser.sendRequest(new String[]{
+                                "POST",
+                                "http://192.168.0.15",
+                                "9000",
+                                "/?properties=%7B%22annotators%22%3A%20%22tokenize%2Cssplit%2Cpos%2Cner%2Cdepparse%2Copenie%22%2C%20%22date%22%3A%20%222019-01-26T16%3A46%3A19%22%7D",
+                                result}
+                        );
+                    }
+                }).start();
             }
         };
 
         pbReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String status = intent.getStringExtra("parser-status");
+                String status = intent.getStringExtra("client-status");
                 if(status.equals("done")) {
-                    String result = intent.getStringExtra("parser-done");
+                    String result = intent.getStringExtra("client-done");
                     try {
                         JSONObject jsonResult = new JSONObject(result);
                         converter.convertSentence(jsonResult, convertedSpeech);
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         System.err.println("Couldn't convert result to JSON");
                     }
                 } else {
-                    String error = intent.getStringExtra("parser-fail");
+                    String error = intent.getStringExtra("client-fail");
                     mRecordText.setText(error);
                 }
             }
@@ -139,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(scbReceiver, new IntentFilter("speech-convert"));
-        LocalBroadcastManager.getInstance(this).registerReceiver(pbReceiver, new IntentFilter("parser"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(pbReceiver, new IntentFilter("client"));
         LocalBroadcastManager.getInstance(this).registerReceiver(cReceiver, new IntentFilter("text-convert"));
     }
 
