@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -101,16 +100,15 @@ public class MainActivity extends AppCompatActivity {
                         );
                     }
                 }).start();
-
             }
         };
 
         pbReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String status = intent.getStringExtra("parser-status");
+                String status = intent.getStringExtra("client-status");
                 if(status.equals("done")) {
-                    String result = intent.getStringExtra("parser-done");
+                    String result = intent.getStringExtra("client-done");
                     try {
                         JSONObject jsonResult = new JSONObject(result);
                         converter.convertSentence(jsonResult, convertedSpeech);
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         System.err.println("Couldn't convert result to JSON");
                     }
                 } else {
-                    String error = intent.getStringExtra("parser-fail");
+                    String error = intent.getStringExtra("client-fail");
                     mRecordText.setText(error);
                 }
             }
@@ -140,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(scbReceiver, new IntentFilter("speech-convert"));
-        LocalBroadcastManager.getInstance(this).registerReceiver(pbReceiver, new IntentFilter("parser"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(pbReceiver, new IntentFilter("client"));
         LocalBroadcastManager.getInstance(this).registerReceiver(cReceiver, new IntentFilter("text-convert"));
     }
 
