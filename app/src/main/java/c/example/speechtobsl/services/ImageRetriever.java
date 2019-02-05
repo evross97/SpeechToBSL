@@ -19,7 +19,6 @@ public class ImageRetriever {
     public ArrayList<Image> getImageSentence(ArrayList<String> sentence) {
         ArrayList<Image> images = new ArrayList<>();
         for(String word : sentence) {
-            System.out.println(word);
             images.addAll(this.getSigns(word));
         }
         return images;

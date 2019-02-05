@@ -14,13 +14,11 @@ public class SignDatabase extends SQLiteAssetHelper {
     private static final Integer dbVersion = 1;
     private SQLiteDatabase db;
     private Cursor cursor;
-    private Context signCtx;
 
 
     public SignDatabase(Context ctx) {
         super(ctx,dbName,null,dbVersion);
         db = this.getReadableDatabase();
-        signCtx = ctx;
     }
 
     public Image queryDatabase(String word) {
