@@ -1,4 +1,4 @@
-package c.example.speechtobsl.services;
+package c.example.speechtobsl.models;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
-import c.example.speechtobsl.utils.Image;
+import c.example.speechtobsl.entities.Image;
 
-public class SignDatabase extends SQLiteAssetHelper {
+public class DatabaseModel extends SQLiteAssetHelper {
 
     private static final String dbName = "sign_db";
     private static final Integer dbVersion = 1;
@@ -16,7 +16,7 @@ public class SignDatabase extends SQLiteAssetHelper {
     private Cursor cursor;
 
 
-    public SignDatabase(Context ctx) {
+    public DatabaseModel(Context ctx) {
         super(ctx,dbName,null,dbVersion);
         db = this.getReadableDatabase();
     }

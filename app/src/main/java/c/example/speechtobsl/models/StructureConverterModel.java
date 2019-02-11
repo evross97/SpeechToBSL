@@ -1,8 +1,4 @@
-package c.example.speechtobsl.services;
-
-import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
+package c.example.speechtobsl.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,9 +12,9 @@ import c.example.structureconverter.Clause;
 import c.example.structureconverter.NounPhrase;
 import c.example.structureconverter.VerbPhrase;
 
-import static c.example.speechtobsl.services.Converter.POS.*;
+import static c.example.speechtobsl.models.StructureConverterModel.POS.*;
 
-public class Converter {
+public class StructureConverterModel {
 
     /**
      * Till Connector is found:
@@ -51,7 +47,6 @@ public class Converter {
 
     private final ArrayList<String> excludedVerbs = new ArrayList<>(Arrays.asList("IS", "ARE", "WERE"));
 
-    private Context appCtx;
     private ArrayList<JSONObject> POSTags;
     private ArrayList<JSONObject> parse;
     private ArrayList<String> englishText;
@@ -59,29 +54,19 @@ public class Converter {
     private ArrayList<String> sentence;
 
 
-    public Converter(Context ctx) {
-        this.appCtx = ctx;
+    public StructureConverterModel() {
         this.sentence = new ArrayList<>();
         this.POSTags = new ArrayList<>();
         this.parse = new ArrayList<>();
     }
 
-    public void convertSentence(JSONObject englishParsedText, String originalText) {
+    public ArrayList<String> convertSentence(JSONObject englishParsedText, String originalText) {
         this.POSTags.clear();
         this.parse.clear();
         this.sentence.clear();
         this.extractData(englishParsedText, originalText);
         this.createClauses();
-        String BSLText = this.sentence.get(0);
-        for(int i = 0; i < this.sentence.size(); i++) {
-            if(i != 0) {
-                BSLText += "," + this.sentence.get(i);
-            }
-        }
-        System.out.println(BSLText);
-        Intent localIntent = new Intent("text-convert");
-        localIntent.putExtra("text-convert-done", BSLText);
-        LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
+        return this.sentence;
     }
 
     private void extractData(JSONObject englishParsedText, String originalText) {
@@ -90,7 +75,9 @@ public class Converter {
             JSONArray sentences = (JSONArray) englishParsedText.get("sentences");
             JSONObject sentence = (JSONObject) sentences.get(0);
             this.POSTags = this.toArrayList((JSONArray)sentence.get("tokens"));
+            System.out.println(this.POSTags);
             this.parse = this.toArrayList((JSONArray)sentence.get("enhancedPlusPlusDependencies"));
+            System.out.println(this.englishText);
         } catch(JSONException e) {
             System.out.println("Failed to extract tags and parse of sentence: " + e.getMessage());
         }
