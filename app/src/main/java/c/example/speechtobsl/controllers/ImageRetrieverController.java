@@ -1,19 +1,19 @@
-package c.example.speechtobsl.services;
+package c.example.speechtobsl.controllers;
 
 import android.content.Context;
 
 import java.util.ArrayList;
 
-import c.example.speechtobsl.utils.Image;
+import c.example.speechtobsl.entities.Image;
+import c.example.speechtobsl.models.DatabaseModel;
+import c.example.speechtobsl.models.SynonymsModel;
 
-public class ImageRetriever {
+public class ImageRetrieverController {
 
-    Context appCtx;
-    SignDatabase db;
+    DatabaseModel db;
 
-    public ImageRetriever(Context ctx) {
-        this.appCtx = ctx;
-        this.db = new SignDatabase(this.appCtx);
+    public ImageRetrieverController(Context ctx) {
+        this.db = new DatabaseModel(ctx);
     }
 
     public ArrayList<Image> getImageSentence(ArrayList<String> sentence) {
@@ -24,13 +24,13 @@ public class ImageRetriever {
         return images;
     }
 
-    public ArrayList<Image> getSigns(String word) {
+    private ArrayList<Image> getSigns(String word) {
         ArrayList<Image> finalSigns = new ArrayList<>();
         Image sign = db.queryDatabase(word);
         Boolean signFound = sign.getImage() != null;
         if(!signFound){
             System.out.println("Need wordnet");
-            SynonymsClient synClient = new SynonymsClient();
+            SynonymsModel synClient = new SynonymsModel();
             ArrayList<String> synonyms = synClient.getSynonyms(word);
             for(String syn : synonyms) {
                 sign = db.queryDatabase(syn);

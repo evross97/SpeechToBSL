@@ -1,4 +1,4 @@
-package c.example.speechtobsl.services;
+package c.example.speechtobsl.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -7,14 +7,16 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SynonymsClient {
+import c.example.speechtobsl.outer_framework.Client;
+
+public class SynonymsModel {
 
     private ArrayList<String> syns;
     private Client thesaurus;
 
-    public SynonymsClient() {
+    public SynonymsModel() {
         this.syns = new ArrayList<>();
-        this.thesaurus = new Client(null);
+        this.thesaurus = new Client();
     }
 
     public ArrayList<String> getSynonyms(String word) {

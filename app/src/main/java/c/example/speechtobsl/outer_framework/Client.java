@@ -1,4 +1,4 @@
-package c.example.speechtobsl.services;
+package c.example.speechtobsl.outer_framework;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +15,7 @@ public class Client {
     private Context appCtx;
     private Intent localIntent = new Intent("client");
 
-    public Client(Context ctx) {
-        appCtx = ctx;
+    public Client() {
     }
 
     /**
@@ -69,14 +68,7 @@ public class Client {
             bf.close();
 
         } catch (Exception e) {
-            localIntent.putExtra("client-status", "fail");
-            localIntent.putExtra("client-fail", "Error: Couldn't send request: " + e.getMessage());
-            LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
-        }
-        if(method.equals("POST")) {
-            localIntent.putExtra("client-status", "done");
-            localIntent.putExtra("client-done", sb.toString());
-            LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
+            return e.getMessage();
         }
         return sb.toString();
     }

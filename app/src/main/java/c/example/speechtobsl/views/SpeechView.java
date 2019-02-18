@@ -1,4 +1,4 @@
-package c.example.speechtobsl.services;
+package c.example.speechtobsl.views;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,18 +11,24 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class SpeechRecognitionListener implements RecognitionListener{
+import c.example.speechtobsl.controllers.MainController;
+import c.example.speechtobsl.outer_framework.SuccessListener;
+
+public class SpeechView implements RecognitionListener {
 
     private SpeechRecognizer speech;
     private Intent recogniserIntent;
     private String decodedSpeech;
+    private MainController mController;
+
     private Context appCtx;
 
     private final String LOG_TAG = "BSL App";
 
-    public SpeechRecognitionListener(Context ctx) {
-        appCtx = ctx;
-        speech = SpeechRecognizer.createSpeechRecognizer(ctx);
+    public SpeechView(Context ctx, SuccessListener listener) {
+        this.appCtx = ctx;
+        mController = new MainController(appCtx, listener);
+        speech = SpeechRecognizer.createSpeechRecognizer(appCtx);
         speech.setRecognitionListener(this);
         recogniserIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recogniserIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
@@ -73,10 +79,7 @@ public class SpeechRecognitionListener implements RecognitionListener{
     public void onResults(Bundle data) {
         ArrayList<String> matches = data.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         decodedSpeech = matches.get(0);
-        Intent localIntent = new Intent("speech-convert");
-        localIntent.putExtra("speech-convert-done", decodedSpeech);
-        LocalBroadcastManager.getInstance(appCtx.getApplicationContext()).sendBroadcast(localIntent);
-
+        mController.getBSL(decodedSpeech);
     }
 
     public void startListening() {
@@ -123,4 +126,4 @@ public class SpeechRecognitionListener implements RecognitionListener{
         }
         return message;
     }
-    }
+}

@@ -1,4 +1,4 @@
-package c.example.speechtobsl;
+package c.example.speechtobsl.outer_framework;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,12 +18,12 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import c.example.speechtobsl.services.Client;
-import c.example.speechtobsl.services.Converter;
-import c.example.speechtobsl.services.SpeechRecognitionListener;
+import c.example.speechtobsl.R;
+import c.example.speechtobsl.models.StructureConverterModel;
+import c.example.speechtobsl.views.SpeechView;
 
 
-public class MainActivity extends AppCompatActivity {
+public class SpeechInputActivity extends AppCompatActivity implements SuccessListener{
 
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private final String LOG_TAG = "BSL App";
@@ -35,28 +34,19 @@ public class MainActivity extends AppCompatActivity {
     private TextView mParsedSentence = null;
     private boolean mStartRecording = false;
 
-    private String convertedSpeech = null;
-    private String BSLSentence = null;
 
-    private SpeechRecognitionListener speech = null;
-    private Client parser = null;
-    private Converter converter = null;
-
-    private BroadcastReceiver cReceiver = null;
-    private BroadcastReceiver pbReceiver = null;
-    private BroadcastReceiver scbReceiver = null;
-
+    private SpeechView speech = null;
+    private Intent intent;
 
     private boolean permissionToRecordAccepted = false;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
-    private Intent signViewer = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        signViewer = new Intent(this, SignViewer.class);
+        intent = new Intent(this,SignViewerActivity.class);
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         mRecordButton = findViewById(R.id.recordButton);
@@ -78,76 +68,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        speech = new SpeechRecognitionListener(this);
-        parser = new Client(this);
-        converter = new Converter(this);
-
-        scbReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context ctx, Intent intent) {
-                String result = intent.getStringExtra("speech-convert-done");
-                convertedSpeech = result;
-                mTextConverted.setText(result);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        parser.sendRequest(new String[]{
-                                "POST",
-                                "http://192.168.0.15",
-                                "9000",
-                                "/?properties=%7B%22annotators%22%3A%20%22tokenize%2Cssplit%2Cpos%2Cner%2Cdepparse%2Copenie%22%2C%20%22date%22%3A%20%222019-01-26T16%3A46%3A19%22%7D",
-                                result}
-                        );
-                    }
-                }).start();
-            }
-        };
-
-        pbReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String status = intent.getStringExtra("client-status");
-                if(status.equals("done")) {
-                    String result = intent.getStringExtra("client-done");
-                    try {
-                        JSONObject jsonResult = new JSONObject(result);
-                        converter.convertSentence(jsonResult, convertedSpeech);
-                    } catch (JSONException e) {
-                        System.err.println("Couldn't convert result to JSON");
-                    }
-                } else {
-                    String error = intent.getStringExtra("client-fail");
-                    mRecordText.setText(error);
-                }
-            }
-        };
-
-        cReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context ctx, Intent intent) {
-                String result = intent.getStringExtra("text-convert-done");
-                mRecordText.setText(result);
-                BSLSentence = result;
-                signViewer.putExtra("bsl-sentence", BSLSentence);
-                startActivity(signViewer);
-            }
-        };
+        speech = new SpeechView(getApplicationContext(), this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(scbReceiver, new IntentFilter("speech-convert"));
-        LocalBroadcastManager.getInstance(this).registerReceiver(pbReceiver, new IntentFilter("client"));
-        LocalBroadcastManager.getInstance(this).registerReceiver(cReceiver, new IntentFilter("text-convert"));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(scbReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(pbReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(cReceiver);
     }
 
     @Override
@@ -171,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
             mRecordText.setText("Press the red button to start recording");
             speech.stopListening();
         }
+    }
+
+    @Override
+    public void onSuccess() {
+        System.out.println("HHHHHHHHHHHHHEEEEEEEEEEEELLLLLLLLLLLLOOOOOOOOOOOOOOO");
+        intent.putExtra("hi","please work");
+        startActivity(intent);
     }
 
     //For demo

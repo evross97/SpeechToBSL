@@ -1,6 +1,4 @@
-package c.example.speechtobsl.utils;
-
-import java.sql.Blob;
+package c.example.speechtobsl.entities;
 
 public class Image {
 
