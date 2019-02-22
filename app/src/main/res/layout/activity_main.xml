@@ -26,30 +26,12 @@
         android:id="@+id/record_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/parsed_sentence"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp"
         android:layout_marginBottom="-300dp"
         android:text="TextView"
         android:textSize="18sp"
         tools:text="Press the red button to start recording" />
-
-    <TextView
-        android:id="@+id/text_converted"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="260dp"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/parsed_sentence"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="300dp"
-        android:text="TextView" />
 
     <RelativeLayout
         android:id="@+id/bottomLevel"
@@ -60,7 +42,7 @@
         android:layout_marginBottom="10dp">
 
         <Button
-            android:id="@+id/recordButton"
+            android:id="@+id/record_button"
 
             android:layout_width="70dp"
             android:layout_height="70dp"
@@ -78,6 +60,16 @@
         android:layout_marginTop="134dp"
         android:text="Speech To BSL"
         android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/loading_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp"
+        android:text="TextView"
+        android:textSize="24sp"
+        tools:text="Loading..." />
 
 
 </RelativeLayout>

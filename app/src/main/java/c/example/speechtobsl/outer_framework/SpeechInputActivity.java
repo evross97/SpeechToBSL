@@ -6,13 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -30,13 +33,13 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
 
     private Button mRecordButton = null;
     private TextView mRecordText = null;
-    private TextView mTextConverted = null;
-    private TextView mParsedSentence = null;
+    private TextView mLoadingText = null;
     private boolean mStartRecording = false;
 
 
     private SpeechView speech = null;
     private Intent intent;
+    private startLoading loading = null;
 
     private boolean permissionToRecordAccepted = false;
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
@@ -49,18 +52,17 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         intent = new Intent(this,SignViewerActivity.class);
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
-        mRecordButton = findViewById(R.id.recordButton);
+        mRecordButton = findViewById(R.id.record_button);
         mRecordText = findViewById(R.id.record_text);
-        mTextConverted = findViewById(R.id.text_converted);
-        mParsedSentence = findViewById(R.id.parsed_sentence);
+        mLoadingText = findViewById(R.id.loading_text);
 
+        mLoadingText.setVisibility(View.INVISIBLE);
         mRecordText.setText("Press the red button to start recording");
-        mParsedSentence.setText("");
-        mTextConverted.setText("");
+        mLoadingText.setText("Loading...");
         mRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(view.getId() == R.id.recordButton) {
+                if(view.getId() == R.id.record_button) {
                     mStartRecording = !mStartRecording;
                     mRecordButton.setBackgroundResource(mStartRecording ? R.drawable.recording: R.drawable.not_recording);
                     onRecord(mStartRecording);
@@ -69,6 +71,7 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         });
 
         speech = new SpeechView(getApplicationContext(), this);
+        loading = new startLoading();
     }
 
     @Override
@@ -101,71 +104,73 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         } else {
             mRecordText.setText("Press the red button to start recording");
             speech.stopListening();
+            loading.execute();
         }
     }
 
     @Override
     public void onSuccess() {
-        System.out.println("HHHHHHHHHHHHHEEEEEEEEEEEELLLLLLLLLLLLOOOOOOOOOOOOOOO");
-        intent.putExtra("hi","please work");
         startActivity(intent);
+        loading.cancel(true);
     }
 
-    //For demo
-    /**
-    private void formatJSONResult(){
+    private class startLoading extends AsyncTask<Void, String, Void> {
 
-        String a = "Time frame: "+findParts("nmod:tmod", 2);
-        String b = "Negation: "+findParts("neg", 1);
-        String c = "Location: "+findParts("case", 1);
-        String d = "Object: "+findParts("dobj", 2);
-        String e = "Subject: "+findParts("nsubj", 2);
-        String f = "Verb: "+findParts("nsubj", 1);
-        String g = "Question: "+findParts("WRB", 3);
-        String h = "Possession: "+findParts("nmod:poss", 2);
-        String i = "Adjectives: "+findParts("amod", 2);
-        mRecordText.setText("");
-        mParsedSentence.setText(a + "\n" + b +"\n" + c + "\n" + d + "\n" + e + "\n" + f + "\n" + g + "\n" + h + "\n" + i);
-    }
-
-    private String findParts(String key, Integer parts) {
-        String value = "";
-
-        try {
-                JSONArray sentences = (JSONArray) jsonResult.get("sentences");
-                JSONObject sentence = (JSONObject) sentences.get(0);
-                if(parts.equals(3)) {
-                    String parse = (String) sentence.get("parse");
-                    if(parse.contains("WRB")) {
-                        value = "True";
-                    } else {
-                        value = "False";
-                    }
-                } else {
-                    JSONArray deps = (JSONArray) sentence.get("basicDependencies");
-                    for(int i=0; i < deps.length(); i++) {
-                        JSONObject current = (JSONObject) deps.get(i);
-                        if(current.getString("dep").equals(key)) {
-                            switch (parts) {
-                                case 1:
-                                    value = current.getString("governorGloss");
-                                    break;
-                                case 2:
-                                    value = current.getString("dependentGloss");
-                                    break;
-                                default:
-                                    value = current.toString();
-                                    break;
-                            }
-                        }
-                    }
-                }
-            } catch(JSONException e) {
-                System.err.println(e.getMessage());
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mRecordButton.setVisibility(View.INVISIBLE);
+            mRecordText.setVisibility(View.INVISIBLE);
+            mLoadingText.setVisibility(View.VISIBLE);
         }
 
-        return value;
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mRecordButton.setVisibility(View.VISIBLE);
+            mRecordText.setVisibility(View.VISIBLE);
+            mLoadingText.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mRecordButton.setVisibility(View.VISIBLE);
+            mRecordText.setVisibility(View.VISIBLE);
+            mLoadingText.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        protected void onProgressUpdate(String... loading) {
+            mLoadingText.setText(loading[0]);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            int count = 0;
+            while(!isCancelled()) {
+                switch(count) {
+                    case 0:
+                        publishProgress("Loading");
+                        count++;
+                        break;
+                    case 1:
+                        publishProgress("Loading.");
+                        count++;
+                        break;
+                    case 2:
+                        publishProgress("Loading..");
+                        count++;
+                        break;
+                    case 3:
+                        publishProgress("Loading...");
+                        count = 0;
+                        break;
+                }
+                SystemClock.sleep(100);
+            }
+            return null;
+        }
     }
-     **/
 
 }

@@ -28,7 +28,12 @@ public class SignView {
     public void showSequence(ArrayList<Image> images) {
         this.BSLImages = images;
         this.currentImageIndex = 0;
-        this.nextImage();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                nextImage();
+            }
+        }, 100);
     }
 
     private void nextImage() {
