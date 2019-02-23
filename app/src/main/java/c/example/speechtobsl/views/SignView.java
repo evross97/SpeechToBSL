@@ -9,6 +9,9 @@ import java.util.ArrayList;
 
 import c.example.speechtobsl.entities.Image;
 
+/**
+ * The view that sends instructions to the Sign Activity
+ */
 public class SignView {
 
     private final Context appCtx;
@@ -16,12 +19,22 @@ public class SignView {
     private Integer currentImageIndex;
     private Intent intent;
 
+    /**
+     * Instantiates a new Sign view.
+     *
+     * @param ctx the context - needed to send images to activity
+     */
     public SignView(Context ctx) {
         this.appCtx = ctx;
         this.BSLImages = new ArrayList<>();
         this.intent = new Intent("signView");
     }
 
+    /**
+     * Show sequence of BSL images with 0.1 seconds inbetween each image
+     *
+     * @param images all BSL signs to be shown
+     */
     public void showSequence(ArrayList<Image> images) {
         this.BSLImages = images;
         this.currentImageIndex = 0;
@@ -33,6 +46,12 @@ public class SignView {
         }, 100);
     }
 
+    /**
+     * Works out what type of image is to be shown next and sends it to the activity
+     * - BSL sign - sends image and description
+     * - Blank - break inbetween signs
+     * Type ofimage also determines how long wait should be before next sign is shown
+     */
     private void nextImage() {
         Integer delayTime = 1000;
         if(currentImageIndex < this.BSLImages.size()) {

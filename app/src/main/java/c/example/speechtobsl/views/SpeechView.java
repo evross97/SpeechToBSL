@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import c.example.speechtobsl.controllers.MainController;
 import c.example.speechtobsl.outer_framework.SuccessListener;
 
+/**
+ * The view that receives instructions from the Speech Actiivty
+ */
 public class SpeechView implements RecognitionListener {
 
     private SpeechRecognizer speech;
@@ -25,6 +28,12 @@ public class SpeechView implements RecognitionListener {
 
     private final String LOG_TAG = "BSL App";
 
+    /**
+     * Instantiates a new Speech view.
+     *
+     * @param ctx      the context - needs to be sent to the main controller
+     * @param listener the success listener - needs to be sent to the main controller
+     */
     public SpeechView(Context ctx, SuccessListener listener) {
         this.appCtx = ctx;
         mController = new MainController(appCtx, listener);
@@ -35,46 +44,74 @@ public class SpeechView implements RecognitionListener {
         recogniserIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
     }
 
+    /**
+     * Android speech recognizer method
+     */
     @Override
     public void onBeginningOfSpeech() {
         Log.i(LOG_TAG, "onBeginningOfSpeech");
     }
 
+    /**
+     * Android speech recognizer method
+     */
     @Override
     public void onRmsChanged(float v) {
         Log.i(LOG_TAG, "onRmsChanged");
     }
 
+    /**
+     * Android speech recognizer method
+     */
     @Override
     public void onBufferReceived(byte[] bytes) {
         Log.i(LOG_TAG, "onBufferReceived: " + bytes);
     }
 
+    /**
+     * Android speech recognizer method
+     */
     @Override
     public void onEndOfSpeech() {
         Log.i(LOG_TAG, "onEndOfSpeech");
     }
 
+    /**
+     * Android speech recognizer method
+     */
     @Override
     public void onError(int code) {
         Log.i(LOG_TAG, "FAILED with error code " + getErrorText(code));
     }
 
+    /**
+     * Android speech recognizer method
+     */
     @Override
     public void onReadyForSpeech(Bundle arg) {
         Log.i(LOG_TAG, "onReadyForSpeech");
     }
 
+    /**
+     * Android speech recognizer method
+     */
     @Override
     public void onPartialResults(Bundle arg) {
         Log.i(LOG_TAG, "onPartialResults");
     }
 
+    /**
+     * Android speech recognizer method
+     */
     @Override
     public void onEvent(int i, Bundle bundle) {
         Log.i(LOG_TAG, "onEvent");
     }
 
+    /**
+     * Android speech recognizer method
+     * Sends request to main controller to begin translation of text
+     */
     @Override
     public void onResults(Bundle data) {
         ArrayList<String> matches = data.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
@@ -82,14 +119,26 @@ public class SpeechView implements RecognitionListener {
         mController.getBSL(decodedSpeech);
     }
 
+    /**
+     * Starts the recorder.
+     */
     public void startListening() {
         speech.startListening(recogniserIntent);
     }
 
+    /**
+     * Stops the recorder.
+     */
     public void stopListening() {
         speech.stopListening();
     }
 
+    /**
+     * Gets error text for printing
+     *
+     * @param errorCode the error code
+     * @return the error text
+     */
     public static String getErrorText(int errorCode) {
         String message;
         switch (errorCode) {

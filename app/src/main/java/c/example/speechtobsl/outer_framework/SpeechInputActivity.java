@@ -17,6 +17,9 @@ import c.example.speechtobsl.R;
 import c.example.speechtobsl.views.SpeechView;
 
 
+/**
+ * The first activity show to user, from here
+ */
 public class SpeechInputActivity extends AppCompatActivity implements SuccessListener{
 
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -36,6 +39,10 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
 
 
+    /**
+     * Creates the activity screen, gets permissions, initiates the text views and buttons
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +82,12 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         super.onPause();
     }
 
+    /**
+     * Checks if app has permissions to record audio
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -88,6 +101,11 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         }
     }
 
+    /**
+     * Starts recording the users speech and gives instructions about stopping recording
+     *
+     * @param start the start
+     */
     public void onRecord(boolean start) {
         if(start) {
             mRecordText.setText("Press the button again to stop recording");
@@ -99,14 +117,23 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         }
     }
 
+    /**
+     * Called to start the sign activity and cancel the loading text
+     */
     @Override
     public void onSuccess() {
         startActivity(intent);
         loading.cancel(true);
     }
 
+    /**
+     * Seperate thread to show loading to user
+     */
     private class startLoading extends AsyncTask<Void, String, Void> {
 
+        /**
+         * Shows loading text and hides other text and recording button
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -115,6 +142,10 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
             mLoadingText.setVisibility(View.VISIBLE);
         }
 
+        /**
+         * Resets screen ready for next input
+         * @param aVoid
+         */
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -123,16 +154,28 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
             mLoadingText.setVisibility(View.INVISIBLE);
         }
 
+        /**
+         * Cancels task
+         */
         @Override
         protected void onCancelled() {
             super.onCancelled();
         }
 
+        /**
+         * Updates text view to show app is progressing to user
+         * @param loading
+         */
         @Override
         protected void onProgressUpdate(String... loading) {
             mLoadingText.setText(loading[0]);
         }
 
+        /**
+         * Updates text shown to user every 0.1 seconds
+         * @param params
+         * @return
+         */
         @Override
         protected Void doInBackground(Void... params) {
             int count = 0;

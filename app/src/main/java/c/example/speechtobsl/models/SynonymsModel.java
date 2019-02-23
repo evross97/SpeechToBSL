@@ -11,18 +11,33 @@ import c.example.speechtobsl.outer_framework.Client;
 import c.example.speechtobsl.structure_converter.models.TagModel;
 import c.example.speechtobsl.structure_converter.utils.POS;
 
+/**
+ * Gets all the possible synonyms for a word that has no exact match in the database using the Oxford Dictionary API
+ */
 public class SynonymsModel {
 
     private ArrayList<String> syns;
     private Client thesaurus;
     private TagModel tagger;
 
+    /**
+     * Creates a client for sending requests to server
+     *
+     * @param tagger the POS tagger - needed to clarify the type of synonyms needed
+     */
     public SynonymsModel(TagModel tagger) {
         this.syns = new ArrayList<>();
         this.thesaurus = new Client();
         this.tagger = tagger;
     }
 
+    /**
+     * Gets synonyms for given word
+     * Request is sent to the oxford dictionary API to get the thesaurus entry for the specified word
+     *
+     * @param word the word that needs synonyms
+     * @return the synonyms
+     */
     public ArrayList<String> getSynonyms(String word) {
         try {
             String wordId = URLEncoder.encode(word.toLowerCase(), "UTF-8");
@@ -50,8 +65,7 @@ public class SynonymsModel {
     }
 
     /**
-     * Request is sent to the oxford dictionary API to get the thesaurus entry for the specified word
-     * Synonyms are then extracted from the JSON response
+     * Synonyms are extracted from the JSON response depending on the type of word (decided by the tagger)
      * @param word the original word
      * @param response all the synonyms
      */
