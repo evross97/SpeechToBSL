@@ -34,7 +34,6 @@ public class ImageRetrieverController {
         Image sign = db.getDBSignForWord(this.allImages, word);
         Boolean signFound = sign.getImage() != null;
         if(!signFound){
-            System.out.println("Need wordnet");
             SynonymsModel synClient = new SynonymsModel();
             ArrayList<String> synonyms = synClient.getSynonyms(word);
             if(synonyms.size() > 0) {
@@ -52,11 +51,9 @@ public class ImageRetrieverController {
                 signFound = false;
             }
             if(!signFound) {
-                System.out.println("Need fingerspelling");
                 finalSigns = this.fingerSpellWord(word);
             }
         } else {
-            System.out.println("First time");
             finalSigns.add(sign);
         }
         return finalSigns;

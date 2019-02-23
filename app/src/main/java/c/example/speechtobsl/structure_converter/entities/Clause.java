@@ -1,4 +1,4 @@
-package c.example.structureconverter;
+package c.example.speechtobsl.structure_converter.entities;
 
 import java.util.ArrayList;
 

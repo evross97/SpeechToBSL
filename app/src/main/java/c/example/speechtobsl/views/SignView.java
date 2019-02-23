@@ -1,10 +1,7 @@
 package c.example.speechtobsl.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -37,12 +34,10 @@ public class SignView {
     }
 
     private void nextImage() {
-        System.out.println(currentImageIndex);
         Integer delayTime = 1000;
         if(currentImageIndex < this.BSLImages.size()) {
             Image currentImage = this.BSLImages.get(currentImageIndex);
             if(currentImage.getImage() != null) {
-                System.out.println(currentImage.getImage() + " " + currentImage.getDesc());
                 //send image
                 this.intent.putExtra("command", "image");
                 this.intent.putExtra("image", currentImage.getImage());

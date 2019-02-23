@@ -1,4 +1,4 @@
-package c.example.structureconverter;
+package c.example.speechtobsl.structure_converter.entities;
 
 import java.util.ArrayList;
 
@@ -19,17 +19,9 @@ public class NounPhrase {
         this.preposition = "";
         this.isSubject = false;
     }
-    public NounPhrase(String nNoun, Boolean nPlural, String nDeterminer, ArrayList<Adjective> nAdjectives, String nPreposition, Boolean nIsSubject) {
-        this.noun = nNoun;
-        this.plural = nPlural;
-        this.determiner = nDeterminer;
-        this.adjectives = nAdjectives;
-        this.preposition = nPreposition;
-        this.isSubject = nIsSubject;
-    }
 
     public String getNoun() {
-        return noun;
+        return this.noun;
     }
 
     public void setNoun(String noun) {

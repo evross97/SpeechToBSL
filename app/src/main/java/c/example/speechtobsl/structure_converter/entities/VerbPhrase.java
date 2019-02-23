@@ -1,10 +1,11 @@
-package c.example.structureconverter;
+package c.example.speechtobsl.structure_converter.entities;
 
 import java.util.ArrayList;
 
 public class VerbPhrase {
 
     private String verb;
+    private String lemmaVerb;
     private String modal;
     private Boolean prepVerb;
     private ArrayList<String> adverbs;
@@ -24,15 +25,23 @@ public class VerbPhrase {
     }
 
     public String getVerb() {
-        return verb;
+        return this.verb;
     }
 
     public void setVerb(String verb) {
         this.verb = verb;
     }
 
+    public String getLemmaVerb() {
+        return this.lemmaVerb;
+    }
+
+    public void setLemmaVerb(String lemmaVerb) {
+        this.lemmaVerb = lemmaVerb;
+    }
+
     public String getModal() {
-        return modal;
+        return this.modal;
     }
 
     public void setModal(String modal) {
@@ -40,7 +49,7 @@ public class VerbPhrase {
     }
 
     public Boolean getPrepVerb() {
-        return prepVerb;
+        return this.prepVerb;
     }
 
     public void setPrepVerb(Boolean prepVerb) {
@@ -48,7 +57,7 @@ public class VerbPhrase {
     }
 
     public ArrayList<String> getAdverbs() {
-        return adverbs;
+        return this.adverbs;
     }
 
     public void setAdverbs(ArrayList<String> adverbs) {
@@ -65,7 +74,7 @@ public class VerbPhrase {
         if(this.adverbs.size() > 0) {
             VP.addAll(this.adverbs);
         }
-        VP.add(this.verb);
+        VP.add(this.lemmaVerb);
         return VP;
     }
 

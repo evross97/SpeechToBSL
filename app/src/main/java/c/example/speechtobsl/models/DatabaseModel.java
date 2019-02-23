@@ -13,7 +13,7 @@ import c.example.speechtobsl.entities.Image;
 
 public class DatabaseModel extends SQLiteAssetHelper {
 
-    private static final String dbName = "sign_db";
+    private static final String dbName = "signDB";
     private static final Integer dbVersion = 1;
     private SQLiteDatabase db;
     private Cursor cursor;

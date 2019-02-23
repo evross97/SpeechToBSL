@@ -7,18 +7,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import c.example.speechtobsl.models.StructureConverterModel;
-import c.example.speechtobsl.models.ParserModel;
+import c.example.speechtobsl.structure_converter.models.StructureConverterModel;
+import c.example.speechtobsl.models.StanfordParserModel;
 
 public class ConverterController {
 
-    private ParserModel parser;
+    private StanfordParserModel parser;
     private StructureConverterModel sConverter;
     private final String LOG_TAG = "BSL - ConverterController";
 
 
     public ConverterController() {
-        this.parser = new ParserModel();
+        this.parser = new StanfordParserModel();
         this.sConverter = new StructureConverterModel();
     }
 

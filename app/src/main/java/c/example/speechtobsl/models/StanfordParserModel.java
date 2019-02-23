@@ -2,12 +2,12 @@ package c.example.speechtobsl.models;
 
 import c.example.speechtobsl.outer_framework.Client;
 
-public class ParserModel {
+public class StanfordParserModel {
 
     Client client;
     String parsedResponse;
 
-    public ParserModel() {
+    public StanfordParserModel() {
         client = new Client();
         parsedResponse = null;
     }
