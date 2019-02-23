@@ -43,7 +43,7 @@ public class ParseModel {
                 if(currentName.equals(word)) {
                     currentName = currentLink.getString("governorGloss");
                 }
-                POS tag = this.tagger.getGeneralTag(currentName);
+                POS tag = this.tagger.getGeneralTag(currentName, true);
                 if(tag.equals(typeWanted)) {
                     linkedWords.add(currentName);
                 }

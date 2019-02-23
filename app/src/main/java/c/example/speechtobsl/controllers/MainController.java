@@ -3,7 +3,10 @@ package c.example.speechtobsl.controllers;
 
 import android.content.Context;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import c.example.speechtobsl.entities.Image;
 import c.example.speechtobsl.outer_framework.SuccessListener;
@@ -27,7 +30,9 @@ public class MainController {
         //set up loading screen by sending intent to speech view
 
         ArrayList<String> BSLSentence = this.cController.convertSentence(text);
-        ArrayList<Image> BSLSigns = this.iController.getImageSentence(BSLSentence);
+        ArrayList<JSONObject> tags = this.cController.getTags();
+        ArrayList<String> splitSentence = new ArrayList<>(Arrays.asList(text.split(" ")));
+        ArrayList<Image> BSLSigns = this.iController.getImageSentence(BSLSentence, tags, splitSentence);
         this.showOutput(BSLSigns);
     }
 

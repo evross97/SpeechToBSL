@@ -22,6 +22,10 @@ public class ConverterController {
         this.sConverter = new StructureConverterModel();
     }
 
+    public ArrayList<JSONObject> getTags() {
+        return this.sConverter.getPOSTags();
+    }
+
     public ArrayList<String> convertSentence(String text) {
         String parsedText = this.parser.getParse(text);
         try {

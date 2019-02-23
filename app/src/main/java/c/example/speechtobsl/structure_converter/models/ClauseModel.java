@@ -39,7 +39,7 @@ public class ClauseModel {
         Clause clause = new Clause(clauseIndex);
         for(int i=0; i < clauseWords.size(); i++) {
             String word = clauseWords.get(i);
-            POS tag = this.tagger.getGeneralTag(word);
+            POS tag = this.tagger.getGeneralTag(word,true);
             switch (tag) {
                 case NOUN:
                     NounPhrase newNP = this.nModel.createNP(word);
@@ -78,11 +78,12 @@ public class ClauseModel {
     }
 
     private Clause addToClause(Clause clause, ArrayList<NounPhrase> NPs, ArrayList<VerbPhrase> VPs, ArrayList<String> preps) {
-        clause.setNPs(NPs);
         if(VPs.size() > 0) {
             clause.setVPs(VPs);
+            clause.setNPs(NPs);
         } else {
             clause.setVPs(this.prepForVP(preps));
+            clause.setNPs(this.nModel.removePreps(NPs, preps));
         }
         clause = this.checkForTense(clause);
         return clause;
@@ -93,7 +94,7 @@ public class ClauseModel {
             Boolean past = false;
             try {
                 for(VerbPhrase VP: clause.getVPs()) {
-                    JSONObject currentTag = this.tagger.getExactTag(VP.getVerb());
+                    JSONObject currentTag = this.tagger.getExactTag(VP.getVerb(), true);
                     String pos = currentTag.getString("pos");
                     if(pos.equals("VBD") | pos.equals("VBN")) {
                         past = true;

@@ -2,28 +2,32 @@ package c.example.speechtobsl.controllers;
 
 import android.content.Context;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import c.example.speechtobsl.entities.Image;
 import c.example.speechtobsl.models.DatabaseModel;
 import c.example.speechtobsl.models.SynonymsModel;
+import c.example.speechtobsl.structure_converter.models.TagModel;
 
 public class ImageRetrieverController {
 
     DatabaseModel db;
     ArrayList<Image> allImages;
+    TagModel tagger;
 
     public ImageRetrieverController(Context ctx) {
         this.db = new DatabaseModel(ctx);
         this.allImages = new ArrayList<>();
     }
 
-    public ArrayList<Image> getImageSentence(ArrayList<String> sentence) {
+    public ArrayList<Image> getImageSentence(ArrayList<String> BSLSentence, ArrayList<JSONObject> tags, ArrayList<String> splitSentence) {
+        this.tagger = new TagModel(tags,splitSentence);
         ArrayList<Image> images = new ArrayList<>();
-        this.allImages = db.getAllImages(sentence);
-        for(String word : sentence) {
+        this.allImages = db.getAllImages(BSLSentence);
+        for(String word : BSLSentence) {
             images.addAll(this.getSigns(word));
         }
         return images;
@@ -34,7 +38,7 @@ public class ImageRetrieverController {
         Image sign = db.getDBSignForWord(this.allImages, word);
         Boolean signFound = sign.getImage() != null;
         if(!signFound){
-            SynonymsModel synClient = new SynonymsModel();
+            SynonymsModel synClient = new SynonymsModel(this.tagger);
             ArrayList<String> synonyms = synClient.getSynonyms(word);
             if(synonyms.size() > 0) {
                 ArrayList<Image> synSigns = db.getAllImages(synonyms);

@@ -56,7 +56,7 @@ public class NounModel {
         //Plural
         Boolean plural = false;
         try{
-            JSONObject currentTag = this.tagger.getExactTag(noun);
+            JSONObject currentTag = this.tagger.getExactTag(noun, true);
             String pos = currentTag.getString("pos");
             if (pos.equals("NNS") || pos.equals("NNPS")) {
                 plural = true;
@@ -93,12 +93,18 @@ public class NounModel {
     private String getSingular(String plural) {
         String sing = "";
         try {
-            JSONObject currentTag = this.tagger.getExactTag(plural);
+            JSONObject currentTag = this.tagger.getExactTag(plural,true);
             sing = currentTag.getString("lemma");
         } catch (JSONException e) {
             System.out.println("Failed to get singular of noun: " + e.getMessage());
         }
-
         return sing;
+    }
+
+    public ArrayList<NounPhrase> removePreps(ArrayList<NounPhrase> NPs, ArrayList<String> preps) {
+        for(NounPhrase NP : NPs) {
+            //why is preps plural???
+        }
+        return NPs;
     }
 }

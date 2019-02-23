@@ -53,6 +53,10 @@ public class StructureConverterModel {
 
     }
 
+    public ArrayList<JSONObject> getPOSTags() {
+        return this.POSTags;
+    }
+
     public ArrayList<String> convertSentence(JSONObject englishParsedText, String originalText) {
         this.POSTags.clear();
         this.parse.clear();
@@ -96,7 +100,7 @@ public class StructureConverterModel {
         Integer clauseIndex = 0;
         for(int i=0; i < this.englishText.size(); i++) {
             String word = this.englishText.get(i);
-            POS tag = this.tagger.getGeneralTag(word);
+            POS tag = this.tagger.getGeneralTag(word, true);
             switch (tag) {
                 case CONN:
                     currentClauseWords.add(word);

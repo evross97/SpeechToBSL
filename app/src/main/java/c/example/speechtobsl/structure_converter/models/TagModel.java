@@ -19,12 +19,18 @@ public class TagModel {
         this.englishText = sentence;
     }
 
-    public JSONObject getExactTag(String word) {
+    public JSONObject getExactTag(String word, Boolean original) {
         JSONObject finalTag = new JSONObject();
         for(int i = 0; i < this.POSTags.size(); i++) {
             JSONObject currentTag = this.POSTags.get(i);
             try {
-                String name = currentTag.getString("word");
+                String name;
+                if(original) {
+                    name = currentTag.getString("word");
+
+                } else {
+                    name = currentTag.getString("lemma");
+                }
                 if (name.equals(word)) {
                     finalTag = currentTag;
                     break;
@@ -36,10 +42,10 @@ public class TagModel {
         return finalTag;
     }
 
-    public POS getGeneralTag(String word) {
+    public POS getGeneralTag(String word, Boolean original) {
         POS finalTag = NA;
         try {
-            JSONObject tag = this.getExactTag(word);
+            JSONObject tag = this.getExactTag(word, original);
             String ner = tag.getString("ner");
             if(ner.equals("DATE")) {
                 finalTag = TIM;

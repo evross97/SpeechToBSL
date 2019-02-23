@@ -31,7 +31,7 @@ public class VerbModel {
         VerbPhrase VP = new VerbPhrase(verb);
         //Get lemma of verb
         try {
-            JSONObject currentTag = this.tagger.getExactTag(verb);
+            JSONObject currentTag = this.tagger.getExactTag(verb, true);
             String lemma = currentTag.getString("lemma");
             VP.setLemmaVerb(lemma);
         } catch(JSONException e) {
