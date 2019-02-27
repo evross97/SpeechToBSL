@@ -12,13 +12,15 @@ public class VerbPhrase {
 
     public VerbPhrase(String nVerb) {
         this.verb = nVerb;
+        this.lemmaVerb = "";
         this.modal = "";
         this.prepVerb = false;
         this.adverbs = new ArrayList<>();
     }
 
-    public VerbPhrase(String nVerb, String nModal, Boolean nPrepVerb, ArrayList<String> nAdverbs) {
+    public VerbPhrase(String nVerb, String lemmaVerb, String nModal, Boolean nPrepVerb, ArrayList<String> nAdverbs) {
         this.verb = nVerb;
+        this.lemmaVerb = lemmaVerb;
         this.modal = nModal;
         this.prepVerb = nPrepVerb;
         this.adverbs = nAdverbs;
@@ -74,7 +76,12 @@ public class VerbPhrase {
         if(this.adverbs.size() > 0) {
             VP.addAll(this.adverbs);
         }
-        VP.add(this.lemmaVerb);
+        if(!this.lemmaVerb.equals(""))
+        {
+            VP.add(this.lemmaVerb);
+        } else {
+            VP.add(this.verb);
+        }
         return VP;
     }
 

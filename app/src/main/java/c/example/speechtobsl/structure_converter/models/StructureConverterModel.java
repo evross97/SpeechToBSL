@@ -103,9 +103,10 @@ public class StructureConverterModel {
             POS tag = this.tagger.getGeneralTag(word, true);
             switch (tag) {
                 case CONN:
-                    currentClauseWords.add(word);
+                    //shouldn't this be added after cleared so that it's in the next clause???
                     this.sentence.addAll(this.cModel.createClause(currentClauseWords,clauseIndex).toArrayString());
                     currentClauseWords.clear();
+                    currentClauseWords.add(word);
                     clauseIndex++;
                     break;
                 default:

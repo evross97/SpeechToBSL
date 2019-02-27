@@ -47,7 +47,7 @@ public class TagModel {
         try {
             JSONObject tag = this.getExactTag(word, original);
             String ner = tag.getString("ner");
-            if(ner.equals("DATE")) {
+            if(ner.equals("DATE") || ner.equals("TIME")) {
                 finalTag = TIM;
             } else {
                 String pos = tag.getString("pos");
@@ -81,9 +81,7 @@ public class TagModel {
                     } else {
                         finalTag = CONN;
                     }
-                    //System.out.println(finalTag);
                 }
-
             }
         } catch(JSONException e) {
             System.out.println("Can't get general tag for " + word + ": " + e.getMessage());

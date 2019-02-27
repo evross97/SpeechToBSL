@@ -15,6 +15,7 @@ public class ParseModel {
 
     public ParseModel(ArrayList<JSONObject> parse, TagModel tagger) {
         this.parse = parse;
+        System.out.println(this.parse);
         this.tagger = tagger;
     }
 

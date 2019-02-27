@@ -20,6 +20,15 @@ public class NounPhrase {
         this.isSubject = false;
     }
 
+    public NounPhrase(String nNoun, Boolean plural, String det, ArrayList<Adjective> adjs, String prep, Boolean subj) {
+        this.noun = nNoun;
+        this.plural = plural;
+        this.determiner = det;
+        this.adjectives = adjs;
+        this.preposition = prep;
+        this.isSubject = subj;
+    }
+
     public String getNoun() {
         return this.noun;
     }

@@ -23,6 +23,16 @@ public class Clause {
         this.beforeConnector = false;
     }
 
+    public Clause(Integer nIndex, ArrayList<NounPhrase> NPs, ArrayList<VerbPhrase> VPs, String time, String question, String connector, Boolean before) {
+        this.index = nIndex;
+        this.NPs = NPs;
+        this.VPs = VPs;
+        this.timeFrame = time;
+        this.question = question;
+        this.connector = connector;
+        this.beforeConnector = before;
+    }
+
     public ArrayList<NounPhrase> getNPs() {
         return NPs;
     }
@@ -31,20 +41,12 @@ public class Clause {
         this.NPs = NPs;
     }
 
-    public void addNP(NounPhrase NP) {
-        this.NPs.add(NP);
-    }
-
     public ArrayList<VerbPhrase> getVPs() {
         return VPs;
     }
 
     public void setVPs(ArrayList<VerbPhrase> VPs) {
         this.VPs = VPs;
-    }
-
-    public void addVP(VerbPhrase VP) {
-        this.VPs.add(VP);
     }
 
     public String getConnector() {
@@ -90,6 +92,7 @@ public class Clause {
         ArrayList<String> objs = new ArrayList<>();
         this.NPs.forEach((NP) -> {
             if(NP.isSubject()) {
+                System.out.println("IS subject" + NP.getNoun());
                 subjs.addAll(NP.toArrayString());
             } else {
                 objs.addAll(NP.toArrayString());

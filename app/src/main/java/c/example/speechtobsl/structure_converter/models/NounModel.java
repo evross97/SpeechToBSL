@@ -63,7 +63,7 @@ public class NounModel {
                 NP.setNoun(this.getSingular(noun));
             }
         } catch(JSONException e) {
-            System.out.println("Unable to check if noun is plural: " + e.getMessage());
+            System.out.println("Unable to check if noun ("+ noun + ") is plural: " + e.getMessage());
         }
         NP.setPlural(plural);
 
