@@ -1,4 +1,4 @@
-package c.example.speechtobsl.structure_converter.models;
+package c.example.speechtobsl.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import c.example.speechtobsl.structure_converter.models.ClauseModel;
+import c.example.speechtobsl.structure_converter.models.TagModel;
 import c.example.speechtobsl.structure_converter.utils.POS;
 
 
@@ -74,7 +76,6 @@ public class StructureConverterModel {
             JSONArray sentences = (JSONArray) englishParsedText.get("sentences");
             JSONObject sentence = (JSONObject) sentences.get(0);
             this.POSTags = this.toArrayList((JSONArray)sentence.get("tokens"));
-            System.out.println(this.POSTags);
             this.parse = this.toArrayList((JSONArray)sentence.get("enhancedPlusPlusDependencies"));
             System.out.println(this.englishText);
 

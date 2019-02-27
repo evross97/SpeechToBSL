@@ -13,15 +13,16 @@ import c.example.speechtobsl.structure_converter.utils.POS;
 
 public class ClauseModel {
 
-    private final ArrayList<String> excludedVerbs = new ArrayList<>(Arrays.asList("IS", "ARE", "WERE"));
-
     private ArrayList<JSONObject> POSTags;
     private ArrayList<JSONObject> parse;
     private ArrayList<String> englishText;
+    private ArrayList<String> clauseWords;
 
     private TagModel tagger;
     private NounModel nModel;
     private VerbModel vModel;
+
+    private final ArrayList<String> excludedVerbs = new ArrayList<>(Arrays.asList("IS", "ARE", "WERE", "WAS"));
 
     public ClauseModel(ArrayList<JSONObject> tags, ArrayList<JSONObject> parse, ArrayList<String> sentence) {
         this.POSTags = tags;
@@ -32,28 +33,33 @@ public class ClauseModel {
         this.vModel = new VerbModel(this.POSTags,this.parse,this.englishText);
     }
 
-    public Clause createClause(ArrayList<String> clauseWords, Integer clauseIndex) {
+    public Clause createClause(ArrayList<String> words, Integer clauseIndex) {
+        this.clauseWords = words;
         ArrayList<NounPhrase> NPs = new ArrayList<>();
         ArrayList<VerbPhrase> VPs = new ArrayList<>();
-        ArrayList<String> preps = new ArrayList<>();
+        String prep = "";
         Clause clause = new Clause(clauseIndex);
-        for(int i=0; i < clauseWords.size(); i++) {
-            String word = clauseWords.get(i);
+        for(int i=0; i < this.clauseWords.size(); i++) {
+            String word = this.clauseWords.get(i);
             POS tag = this.tagger.getGeneralTag(word,true);
             switch (tag) {
                 case NOUN:
-                    System.out.println("I'm a  noun FOR WHAT??" + word);
-                    NounPhrase newNP = this.nModel.createNP(word);
+                    System.out.println("Noun:" + word);
+                    NounPhrase newNP = this.nModel.createNP(this.clauseWords, word);
                     NPs.add(newNP);
                     break;
                 case VRB:
                     if(!this.excludedVerbs.contains(word.toUpperCase())) {
-                        VerbPhrase newVP = this.vModel.createVP(word, false);
+                        VerbPhrase newVP = this.vModel.createVP(this.clauseWords, word,false, false);
                         VPs.add(newVP);
                     }
                     break;
+                case MDL:
+                    VerbPhrase newVP = this.vModel.createVP(this.clauseWords, word, true, false);
+                    VPs.add(newVP);
+                    break;
                 case PREP:
-                    preps.add(word);
+                    prep = word;
                     break;
                 case TIM:
                     clause.setTimeFrame(word);
@@ -72,55 +78,62 @@ public class ClauseModel {
             }
 
         }
-        clause = this.addToClause(clause, NPs, VPs, preps);
-        //System.out.println("Clause: " + currentClause.toArrayString());
-        //System.out.println("New Clause: " + currentClause.toArrayString());
+        clause = this.addToClause(clause, NPs, VPs, prep);
         return clause;
     }
 
-    private Clause addToClause(Clause clause, ArrayList<NounPhrase> NPs, ArrayList<VerbPhrase> VPs, ArrayList<String> preps) {
+    private Clause addToClause(Clause clause, ArrayList<NounPhrase> NPs, ArrayList<VerbPhrase> VPs, String prep) {
         if(VPs.size() > 0) {
             clause.setVPs(VPs);
             clause.setNPs(NPs);
         } else {
-            clause.setVPs(this.prepForVP(preps));
-            clause.setNPs(this.nModel.removePreps(NPs, preps));
+            if(!prep.equals("")) {
+                clause.setVPs(this.prepForVP(prep));
+                clause.setNPs(this.nModel.removePreps(NPs, prep));
+            } else {
+                clause.setNPs(NPs);
+            }
         }
         clause = this.checkForTense(clause);
+        clause.setVPs(vModel.checkVerbs(clause.getVPs()));
         return clause;
     }
 
     private Clause checkForTense(Clause clause) {
         if(clause.getTimeFrame().equals("")) {
-            Boolean past = false;
+            Integer tense = 0;
+            Boolean isModal = false;
             try {
                 for(VerbPhrase VP: clause.getVPs()) {
                     JSONObject currentTag = this.tagger.getExactTag(VP.getVerb(), true);
                     String pos = currentTag.getString("pos");
                     if(pos.equals("VBD") | pos.equals("VBN")) {
-                        past = true;
-                        break;
+                        tense = 1;
                     }
+                    if(VP.getIsModal()) {
+                        isModal = true;
+                    }
+                }
+                if(tense.equals(0) && isModal) {
+                    tense = 2;
                 }
             } catch (JSONException e) {
                 System.out.println("Failed to check tense of verbs: " + e.getMessage());
             }
-            if(past) {
+            if(tense.equals(1)) {
                 clause.setTimeFrame("BEFORE");
+            }
+            if(tense.equals(2)) {
+                clause.setTimeFrame("FUTURE");
             }
         }
         return clause;
     }
 
-    private ArrayList<VerbPhrase> prepForVP(ArrayList<String> possibles) {
+    private ArrayList<VerbPhrase> prepForVP(String possible) {
         ArrayList<VerbPhrase> VPs = new ArrayList<>();
-        if(possibles.size() > 0) {
-            for(int i = 0; i < possibles.size(); i++) {
-                VerbPhrase newVP = this.vModel.createVP(possibles.get(i),true);
-                VPs.add(newVP);
-            }
-        }
+        VerbPhrase newVP = this.vModel.createVP(this.clauseWords, possible,false,true);
+        VPs.add(newVP);
         return VPs;
-
     }
 }

@@ -30,26 +30,26 @@ public class NounModel {
         this.parser = new ParseModel(this.parse, this.tagger);
     }
 
-    public NounPhrase createNP(String noun) {
+    public NounPhrase createNP(ArrayList<String> clauseWords, String noun) {
         NounPhrase NP = new NounPhrase(noun);
         //Adjectives
-        ArrayList<String> stringAdjs = this.parser.findLinks(noun, ADJ);
+        ArrayList<String> stringAdjs = this.parser.findLinks(clauseWords, noun, ADJ);
         ArrayList<Adjective> adjs = new ArrayList<>();
         for(int i = 0; i < stringAdjs.size(); i++) {
             String currentAdj = stringAdjs.get(i);
-            ArrayList<String> advs = this.parser.findLinks(currentAdj, ADV);
+            ArrayList<String> advs = this.parser.findLinks(clauseWords, currentAdj, ADV);
             Adjective adj = new Adjective(currentAdj, advs);
             adjs.add(adj);
         }
         NP.setAdjectives(adjs);
 
         //Det
-        ArrayList<String> dets = this.parser.findLinks(noun, DET);
+        ArrayList<String> dets = this.parser.findLinks(clauseWords, noun, DET);
         if(!dets.isEmpty()) {
             NP.setDeterminer(dets.get(0));
         }
         //Prep
-        ArrayList<String> preps = this.parser.findLinks(noun, PREP);
+        ArrayList<String> preps = this.parser.findLinks(clauseWords, noun, PREP);
         if(!preps.isEmpty()) {
             NP.setPreposition(preps.get(0));
         }
@@ -69,8 +69,9 @@ public class NounModel {
 
         //IsSubject
         Boolean nsubj = false;
-        for(int j = 0; j < this.parse.size(); j++) {
-            JSONObject currentParse = this.parse.get(j);
+        ArrayList<JSONObject> links = this.parser.getLinkedParses(noun);
+        for(int j = 0; j < links.size(); j++) {
+            JSONObject currentParse = links.get(j);
             try {
                 String type = currentParse.getString("dep");
                 if(type.equals("nsubj")) {
@@ -101,9 +102,11 @@ public class NounModel {
         return sing;
     }
 
-    public ArrayList<NounPhrase> removePreps(ArrayList<NounPhrase> NPs, ArrayList<String> preps) {
+    public ArrayList<NounPhrase> removePreps(ArrayList<NounPhrase> NPs, String prep) {
         for(NounPhrase NP : NPs) {
-            //why is preps plural???
+            if(NP.getPreposition().equals(prep)) {
+                NP.setPreposition("");
+            }
         }
         return NPs;
     }

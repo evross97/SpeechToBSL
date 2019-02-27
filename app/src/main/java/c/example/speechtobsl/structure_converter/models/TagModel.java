@@ -69,7 +69,7 @@ public class TagModel {
                 if(pos.contains("NN") || pos.equals("PRP")) {
                     finalTag = NOUN;
                 }
-                if(pos.startsWith("RB")) {
+                if(pos.startsWith("RB") || pos.equals("RP")) {
                     finalTag = ADV;
                 }
                 if(pos.contains("VB")) {

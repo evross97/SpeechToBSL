@@ -36,6 +36,7 @@ public class SignView {
      * @param images all BSL signs to be shown
      */
     public void showSequence(ArrayList<Image> images) {
+        this.BSLImages.clear();
         this.BSLImages = images;
         this.currentImageIndex = 0;
         new Handler().postDelayed(new Runnable() {

@@ -6,23 +6,26 @@ public class VerbPhrase {
 
     private String verb;
     private String lemmaVerb;
-    private String modal;
+    private Boolean isModal;
     private Boolean prepVerb;
+    private Boolean negated;
     private ArrayList<String> adverbs;
 
     public VerbPhrase(String nVerb) {
         this.verb = nVerb;
         this.lemmaVerb = "";
-        this.modal = "";
+        this.isModal = false;
         this.prepVerb = false;
+        this.negated = false;
         this.adverbs = new ArrayList<>();
     }
 
-    public VerbPhrase(String nVerb, String lemmaVerb, String nModal, Boolean nPrepVerb, ArrayList<String> nAdverbs) {
+    public VerbPhrase(String nVerb, String lemmaVerb, Boolean nIsModal, Boolean nPrepVerb, Boolean negated, ArrayList<String> nAdverbs) {
         this.verb = nVerb;
         this.lemmaVerb = lemmaVerb;
-        this.modal = nModal;
+        this.isModal = nIsModal;
         this.prepVerb = nPrepVerb;
+        this.negated = negated;
         this.adverbs = nAdverbs;
     }
 
@@ -42,12 +45,12 @@ public class VerbPhrase {
         this.lemmaVerb = lemmaVerb;
     }
 
-    public String getModal() {
-        return this.modal;
+    public Boolean getIsModal() {
+        return this.isModal;
     }
 
-    public void setModal(String modal) {
-        this.modal = modal;
+    public void setIsModal(Boolean isModal) {
+        this.isModal = isModal;
     }
 
     public Boolean getPrepVerb() {
@@ -56,6 +59,14 @@ public class VerbPhrase {
 
     public void setPrepVerb(Boolean prepVerb) {
         this.prepVerb = prepVerb;
+    }
+
+    public Boolean getNegated() {
+        return this.negated;
+    }
+
+    public void setNegated(Boolean negated) {
+        this.negated = negated;
     }
 
     public ArrayList<String> getAdverbs() {
@@ -68,14 +79,16 @@ public class VerbPhrase {
 
     public ArrayList<String> toArrayString() {
         ArrayList<String> VP = new ArrayList<>();
-        //modal
-        if(!this.modal.equals("")) {
-            VP.add(this.modal);
+        //negation
+        if(this.negated) {
+            VP.add("NO");
         }
         //adverbs
         if(this.adverbs.size() > 0) {
             VP.addAll(this.adverbs);
         }
+        System.out.println("Lemma: " + lemmaVerb);
+        System.out.println("Verb: " + verb);
         if(!this.lemmaVerb.equals(""))
         {
             VP.add(this.lemmaVerb);

@@ -92,7 +92,6 @@ public class Clause {
         ArrayList<String> objs = new ArrayList<>();
         this.NPs.forEach((NP) -> {
             if(NP.isSubject()) {
-                System.out.println("IS subject" + NP.getNoun());
                 subjs.addAll(NP.toArrayString());
             } else {
                 objs.addAll(NP.toArrayString());

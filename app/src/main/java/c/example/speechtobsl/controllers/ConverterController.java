@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import c.example.speechtobsl.structure_converter.models.StructureConverterModel;
+import c.example.speechtobsl.models.StructureConverterModel;
 import c.example.speechtobsl.models.StanfordParserModel;
 
 /**
