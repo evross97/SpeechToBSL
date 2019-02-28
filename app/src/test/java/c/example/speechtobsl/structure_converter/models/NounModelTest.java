@@ -41,16 +41,16 @@ public class NounModelTest {
     public void createNP() {
         //also tests private getSingular method
         //good noun - plural
-        NounPhrase result1 = this.model.createNP("names");
+        NounPhrase result1 = this.model.createNP(this.englishText, "names");
         assertEquals(this.utils.np1.toArrayString(),result1.toArrayString());
         //good noun - plural - with adjectives
-        NounPhrase result2 = this.model.createNP("dogs");
+        NounPhrase result2 = this.model.createNP(this.englishText,"dogs");
         assertEquals(this.utils.np2.toArrayString(), result2.toArrayString());
         //good noun - pronoun
-        NounPhrase result3 = this.model.createNP("they");
+        NounPhrase result3 = this.model.createNP(this.englishText,"they");
         assertEquals(this.utils.np3.toArrayString(),result3.toArrayString());
         //bad noun
-        NounPhrase result4 = this.model.createNP("girl");
+        NounPhrase result4 = this.model.createNP(this.englishText,"girl");
         NounPhrase expected4 = new NounPhrase("girl");
         assertEquals(expected4.toArrayString(), result4.toArrayString());
     }

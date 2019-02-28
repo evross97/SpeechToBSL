@@ -1,4 +1,4 @@
-package c.example.speechtobsl.structure_converter.models;
+package c.example.speechtobsl.models;
 
 import org.json.JSONObject;
 import org.junit.After;

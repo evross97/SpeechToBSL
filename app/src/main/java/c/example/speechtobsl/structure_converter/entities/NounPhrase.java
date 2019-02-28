@@ -29,32 +29,16 @@ public class NounPhrase {
         this.isSubject = subj;
     }
 
-    public String getNoun() {
-        return this.noun;
-    }
-
     public void setNoun(String noun) {
         this.noun = noun;
-    }
-
-    public Boolean getPlural() {
-        return plural;
     }
 
     public void setPlural(Boolean plural) {
         this.plural = plural;
     }
 
-    public String getDeterminer() {
-        return determiner;
-    }
-
     public void setDeterminer(String determiner) {
         this.determiner = determiner;
-    }
-
-    public ArrayList<Adjective> getAdjectives() {
-        return adjectives;
     }
 
     public void setAdjectives(ArrayList<Adjective> adjectives) {

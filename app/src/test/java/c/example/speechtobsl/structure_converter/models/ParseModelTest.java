@@ -17,6 +17,7 @@ public class ParseModelTest {
     private ArrayList<JSONObject> parse;
     private TagModel tagger;
     private ParseModel parseModel;
+    private ArrayList<String> sentence;
 
     private TestUtils utils;
 
@@ -25,7 +26,7 @@ public class ParseModelTest {
         this.utils = new TestUtils();
         this.parse = this.utils.parse;
         this.tagger = new TagModel(this.utils.POSTags,this.utils.englishText);
-
+        this.sentence = this.utils.englishText;
         this.parseModel = new ParseModel(this.parse,this.tagger);
     }
 
@@ -38,16 +39,16 @@ public class ParseModelTest {
     public void findLinks() {
         ArrayList<String> emptyList = new ArrayList<>();
         //correct word, valid POS
-        ArrayList<String> result1 = this.parseModel.findLinks("what", POS.VRB);
+        ArrayList<String> result1 = this.parseModel.findLinks(this.sentence,"what", POS.VRB);
         ArrayList<String> expected1 = new ArrayList<>();
         expected1.add("are");
         expected1.add("run");
         assertEquals(expected1, result1);
         //correct word, invalid POS
-        ArrayList<String> result2 = this.parseModel.findLinks("dogs", POS.QTN);
+        ArrayList<String> result2 = this.parseModel.findLinks(this.sentence,"dogs", POS.QTN);
         assertEquals(emptyList, result2);
         //incorrect word
-        ArrayList<String> result3 = this.parseModel.findLinks("girl", POS.NOUN);
+        ArrayList<String> result3 = this.parseModel.findLinks(this.sentence,"girl", POS.NOUN);
         assertEquals(emptyList, result3);
     }
 }

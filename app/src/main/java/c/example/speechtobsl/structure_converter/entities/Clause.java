@@ -33,10 +33,6 @@ public class Clause {
         this.beforeConnector = before;
     }
 
-    public ArrayList<NounPhrase> getNPs() {
-        return NPs;
-    }
-
     public void setNPs(ArrayList<NounPhrase> NPs) {
         this.NPs = NPs;
     }
@@ -49,16 +45,8 @@ public class Clause {
         this.VPs = VPs;
     }
 
-    public String getConnector() {
-        return connector;
-    }
-
     public void setConnector(String connector) {
         this.connector = connector;
-    }
-
-    public Boolean getBeforeConnector() {
-        return beforeConnector;
     }
 
     public void setBeforeConnector(Boolean beforeConnector) {
@@ -71,10 +59,6 @@ public class Clause {
 
     public void setTimeFrame(String timeFrame) {
         this.timeFrame = timeFrame;
-    }
-
-    public String getQuestion() {
-        return question;
     }
 
     public void setQuestion(String question) {

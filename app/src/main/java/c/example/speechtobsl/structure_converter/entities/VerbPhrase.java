@@ -33,14 +33,6 @@ public class VerbPhrase {
         return this.verb;
     }
 
-    public void setVerb(String verb) {
-        this.verb = verb;
-    }
-
-    public String getLemmaVerb() {
-        return this.lemmaVerb;
-    }
-
     public void setLemmaVerb(String lemmaVerb) {
         this.lemmaVerb = lemmaVerb;
     }
@@ -53,24 +45,12 @@ public class VerbPhrase {
         this.isModal = isModal;
     }
 
-    public Boolean getPrepVerb() {
-        return this.prepVerb;
-    }
-
     public void setPrepVerb(Boolean prepVerb) {
         this.prepVerb = prepVerb;
     }
 
-    public Boolean getNegated() {
-        return this.negated;
-    }
-
     public void setNegated(Boolean negated) {
         this.negated = negated;
-    }
-
-    public ArrayList<String> getAdverbs() {
-        return this.adverbs;
     }
 
     public void setAdverbs(ArrayList<String> adverbs) {

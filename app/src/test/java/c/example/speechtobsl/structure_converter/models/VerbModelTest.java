@@ -38,13 +38,13 @@ public class VerbModelTest {
     public void createVP() {
         VerbModel model = new VerbModel(this.POSTags,this.parse,this.sentence);
         //good verb, prep
-        VerbPhrase result1 = model.createVP("of", true);
+        VerbPhrase result1 = model.createVP(this.sentence,"of", false, true);
         assertEquals(this.utils.vp1.toArrayString(), result1.toArrayString());
         //good verb, not prep
-        VerbPhrase result2 = model.createVP("run", false);
+        VerbPhrase result2 = model.createVP(this.sentence,"run", false, false);
         assertEquals(this.utils.vp2.toArrayString(), result2.toArrayString());
         //bad verb
-        VerbPhrase result3 = model.createVP("walk", false);
+        VerbPhrase result3 = model.createVP(this.sentence,"walk",false, false);
         VerbPhrase expected3 = new VerbPhrase("walk");
         assertEquals(expected3.toArrayString(),result3.toArrayString());
     }

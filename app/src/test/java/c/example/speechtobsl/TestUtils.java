@@ -49,6 +49,7 @@ public class TestUtils {
 
     public VerbPhrase vp1;
     public VerbPhrase vp2;
+    public VerbPhrase vp3;
 
     public NounPhrase np1;
     public NounPhrase np2;
@@ -699,10 +700,11 @@ public class TestUtils {
 
         this.englishString = "what are the names of the big dogs and could they run quickly";
 
-        this.vp1 = new VerbPhrase("of","of", "", true, new ArrayList<>());
+        this.vp1 = new VerbPhrase("of","of", false, true, false, new ArrayList<>());
         ArrayList<String> adverbs = new ArrayList<>();
         adverbs.add("quickly");
-        this.vp2 = new VerbPhrase("run","run", "could", false, adverbs);
+        this.vp2 = new VerbPhrase("run","run", false, false, false, adverbs);
+        this.vp3 = new VerbPhrase("could", "could", true, false, false, new ArrayList<>());
 
         this.np1 = new NounPhrase("name",true,"the",new ArrayList<>(),"of",true);
         Adjective adj = new Adjective("big", new ArrayList<>());
@@ -719,12 +721,13 @@ public class TestUtils {
         this.c1 = new Clause(0,nps1,vps1,"", "what","",false);
 
         ArrayList<VerbPhrase> vps2 = new ArrayList<>();
+        vps2.add(vp3);
         vps2.add(vp2);
         ArrayList<NounPhrase> nps2 = new ArrayList<>();
         nps2.add(np3);
-        this.c2 = new Clause(1,nps2,vps2,"","","and",false);
+        this.c2 = new Clause(1,nps2,vps2,"FUTURE","","and",false);
 
-        String[] ordered = new String[]{"MANY", "dog", "big", "MANY", "name", "of", "what", "and", "they", "could", "quickly", "run"};
+        String[] ordered = new String[]{"MANY", "dog", "big", "MANY", "name", "of", "what", "and", "FUTURE", "they", "could", "quickly", "run"};
         this.parsedSentence = new ArrayList<>(Arrays.asList(ordered));
     }
 }

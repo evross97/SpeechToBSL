@@ -33,29 +33,20 @@ public class ClauseTest {
     }
 
     @Test
-    public void getNPs() {
-        ArrayList<NounPhrase> result1 = this.c1.getNPs();
-        assertEquals(2, result1.size());
-        assertEquals(this.utils.np1, result1.get(0));
-        assertEquals(this.utils.np2, result1.get(1));
-
-        ArrayList<NounPhrase> result2 = this.c3.getNPs();
-        assertEquals(0,result2.size());
-    }
-
-    @Test
     public void setNPs() {
         ArrayList<NounPhrase> NPs = new ArrayList<>();
         NPs.add(this.utils.np2);
         this.c3.setNPs(NPs);
-        assertEquals(1,this.c3.getNPs().size());
+        assertTrue(this.c3.toArrayString().contains("dog"));
     }
 
     @Test
     public void getVPs() {
         ArrayList<VerbPhrase> result1 = this.c2.getVPs();
-        assertEquals(1, result1.size());
-        assertEquals(this.utils.vp2, result1.get(0));
+        assertEquals(2, result1.size());
+        assertEquals(this.utils.vp3, result1.get(0));
+        assertEquals(this.utils.vp2, result1.get(1));
+
 
         ArrayList<VerbPhrase> result2 = this.c3.getVPs();
         assertEquals(0,result2.size());
@@ -70,42 +61,27 @@ public class ClauseTest {
     }
 
     @Test
-    public void getConnector() {
-        String result1 = c2.getConnector();
-        assertEquals("and", result1);
-
-        String result2 = c3.getConnector();
-        assertEquals("", result2);
-    }
-
-    @Test
     public void setConnector() {
-        String result1 = c3.getConnector();
+        ArrayList<String> before = c3.toArrayString();
         c3.setConnector("but");
-        String result2 = c3.getConnector();
-        assertNotEquals(result1, result2);
-        assertEquals("but", result2);
-    }
-
-    @Test
-    public void getBeforeConnector() {
-        Boolean result1 = c2.getBeforeConnector();
-        assertEquals(false, result1);
+        ArrayList<String> after = c3.toArrayString();
+        assertEquals(before.size()+1, after.size());
+        assertTrue(after.contains("but"));
     }
 
     @Test
     public void setBeforeConnector() {
-        Boolean result1 = c3.getBeforeConnector();
-        c3.setBeforeConnector(true);
-        Boolean result2 = c3.getBeforeConnector();
-        assertNotEquals(result2, result1);
-        assertTrue(result2);
+        int before = c2.toArrayString().indexOf("and");
+        c2.setBeforeConnector(true);
+        int after = c2.toArrayString().indexOf("and");
+        Boolean condition = after > before;
+        assertTrue(condition);
     }
 
     @Test
     public void getTimeFrame() {
         String result1 = c2.getTimeFrame();
-        assertEquals("", result1);
+        assertEquals("FUTURE", result1);
     }
 
     @Test
@@ -118,21 +94,12 @@ public class ClauseTest {
     }
 
     @Test
-    public void getQuestion() {
-        String result1 = c1.getQuestion();
-        assertEquals("what", result1);
-
-        String result2 = c3.getConnector();
-        assertEquals("", result2);
-    }
-
-    @Test
     public void setQuestion() {
-        String result1 = c3.getQuestion();
+        ArrayList<String> before = c3.toArrayString();
         c3.setQuestion("why");
-        String result2 = c3.getQuestion();
-        assertNotEquals(result1, result2);
-        assertEquals("why", result2);
+        ArrayList<String> after = c3.toArrayString();
+        assertNotEquals(before.size(), after.size());
+        assertEquals(after.get(0), "why");
     }
 
     @Test
@@ -142,7 +109,7 @@ public class ClauseTest {
         ArrayList<String> result1 = c1.toArrayString();
         assertEquals(expected1, result1);
 
-        String[] exp2 = new String[]{"and", "they", "could", "quickly", "run"};
+        String[] exp2 = new String[]{"and", "FUTURE", "they", "could", "quickly", "run"};
         ArrayList<String> expected2 = new ArrayList<>(Arrays.asList(exp2));
         ArrayList<String> result2 = c2.toArrayString();
         assertEquals(expected2, result2);

@@ -32,48 +32,6 @@ public class AdjectiveTest {
     }
 
     @Test
-    public void getAdjective() {
-        String result1 = this.adj1.getAdjective();
-        assertEquals("big",result1);
-
-        String result2 = this.adj2.getAdjective();
-        assertEquals("small", result2);
-
-        String result3 = this.adj3.getAdjective();
-        assertEquals("",result3);
-    }
-
-    @Test
-    public void setAdjective() {
-        String result1 = this.adj2.getAdjective();
-        this.adj2.setAdjective("tiny");
-        String result2 = this.adj2.getAdjective();
-        assertNotEquals(result1,result2);
-        assertEquals("tiny", this.adj2.getAdjective());
-    }
-
-    @Test
-    public void getAdverbs() {
-        ArrayList<String> result1 = this.adj1.getAdverbs();
-        assertEquals(this.adverbs, result1);
-
-        ArrayList<String> result2 = this.adj2.getAdverbs();
-        assertEquals(new ArrayList<>(), result2);
-    }
-
-    @Test
-    public void setAdverbs() {
-        ArrayList<String> adverbs2 = new ArrayList<>();
-        adverbs2.addAll(this.adverbs);
-        adverbs2.add("gently");
-        ArrayList<String> result1 = this.adj1.getAdverbs();
-        this.adj1.setAdverbs(adverbs2);
-        ArrayList<String> result2 = this.adj1.getAdverbs();
-        assertNotEquals(result1.size(),result2.size());
-        assertEquals(adverbs2, result2);
-    }
-
-    @Test
     public void toArrayString() {
         String[] exp1 = new String[]{"quickly", "carefully", "big"};
         ArrayList<String> expected1 = new ArrayList<>(Arrays.asList(exp1));

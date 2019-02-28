@@ -12,22 +12,6 @@ public class Adjective {
         this.adverbs = nAdverbs;
     }
 
-    public String getAdjective() {
-        return adjective;
-    }
-
-    public void setAdjective(String adjective) {
-        this.adjective = adjective;
-    }
-
-    public ArrayList<String> getAdverbs() {
-        return adverbs;
-    }
-
-    public void setAdverbs(ArrayList<String> adverbs) {
-        this.adverbs = adverbs;
-    }
-
     public ArrayList<String> toArrayString() {
         ArrayList<String> adj = new ArrayList<>();
         if(this.adverbs.size() > 0) {
