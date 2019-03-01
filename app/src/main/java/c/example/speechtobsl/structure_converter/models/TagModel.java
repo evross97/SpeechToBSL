@@ -9,16 +9,32 @@ import c.example.speechtobsl.structure_converter.utils.POS;
 
 import static c.example.speechtobsl.structure_converter.utils.POS.*;
 
+/**
+ * Extracts required information from the tags of the sentence
+ */
 public class TagModel {
 
     private ArrayList<JSONObject> POSTags;
     private ArrayList<String> englishText;
 
+    /**
+     * Instantiates a new tag model.
+     *
+     * @param tags     the POS tags
+     * @param sentence the English sentence
+     */
     public TagModel(ArrayList<JSONObject> tags, ArrayList<String> sentence){
         this.POSTags = tags;
         this.englishText = sentence;
     }
 
+    /**
+     * Gets tag object for a given word.
+     *
+     * @param word     the word
+     * @param original indicates whether the word is in its original form or is the lemma form
+     * @return the exact tag
+     */
     public JSONObject getExactTag(String word, Boolean original) {
         JSONObject finalTag = new JSONObject();
         for(int i = 0; i < this.POSTags.size(); i++) {
@@ -42,6 +58,13 @@ public class TagModel {
         return finalTag;
     }
 
+    /**
+     * Determines which of the POS enums is most appropriate for the given word
+     *
+     * @param word     the word
+     * @param original the original
+     * @return the POS tag
+     */
     public POS getGeneralTag(String word, Boolean original) {
         POS finalTag = NA;
         try {

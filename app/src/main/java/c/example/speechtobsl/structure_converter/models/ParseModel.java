@@ -7,17 +7,35 @@ import java.util.ArrayList;
 
 import c.example.speechtobsl.structure_converter.utils.POS;
 
+/**
+ * Extracts required information from the dependency parse of the sentence
+ */
 public class ParseModel {
 
     private ArrayList<JSONObject> parse;
 
     private TagModel tagger;
 
+    /**
+     * Instantiates a new parse model.
+     *
+     * @param parse  the parse of the sentence
+     * @param tagger the tagger
+     */
     public ParseModel(ArrayList<JSONObject> parse, TagModel tagger) {
         this.parse = parse;
         this.tagger = tagger;
     }
 
+    /**
+     * Finds all words of a particular POS type that are related to a given word
+     * They must be in the same clause as the word
+     *
+     * @param clauseWords all the words in the current clause
+     * @param word        the word
+     * @param typeWanted  the POS type wanted
+     * @return array of all relevant links
+     */
     public ArrayList<String> findLinks(ArrayList<String> clauseWords, String word, POS typeWanted) {
         ArrayList<JSONObject> possibleLinks = getLinkedParses(word);
         ArrayList<String> linkedWords = new ArrayList<>();
@@ -41,6 +59,12 @@ public class ParseModel {
         return linkedWords;
     }
 
+    /**
+     * Gets all words that are linked in any way to the given word
+     *
+     * @param word the word
+     * @return list of all relevant parse objects
+     */
     public ArrayList<JSONObject> getLinkedParses(String word) {
         ArrayList<JSONObject> links = new ArrayList<>();
 

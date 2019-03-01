@@ -11,6 +11,9 @@ import c.example.speechtobsl.structure_converter.entities.NounPhrase;
 import c.example.speechtobsl.structure_converter.entities.VerbPhrase;
 import c.example.speechtobsl.structure_converter.utils.POS;
 
+/**
+ * Used to create and manipulate clauses.
+ */
 public class ClauseModel {
 
     private ArrayList<JSONObject> POSTags;
@@ -24,6 +27,13 @@ public class ClauseModel {
 
     private final ArrayList<String> excludedVerbs = new ArrayList<>(Arrays.asList("IS", "ARE", "WERE", "WAS"));
 
+    /**
+     * Instantiates a new clause model.
+     *
+     * @param tags     the POS tags
+     * @param parse    the dependency parse
+     * @param sentence the English sentence
+     */
     public ClauseModel(ArrayList<JSONObject> tags, ArrayList<JSONObject> parse, ArrayList<String> sentence) {
         this.POSTags = tags;
         this.parse = parse;
@@ -33,6 +43,14 @@ public class ClauseModel {
         this.vModel = new VerbModel(this.POSTags,this.parse,this.englishText);
     }
 
+    /**
+     * Create a new clause.
+     * Goes through each word, determines its type and assigns it to the correct property within the clause
+     *
+     * @param words       the words to be included in the clause
+     * @param clauseIndex the clause index
+     * @return the clause
+     */
     public Clause createClause(ArrayList<String> words, Integer clauseIndex) {
         this.clauseWords = words;
         ArrayList<NounPhrase> NPs = new ArrayList<>();
@@ -82,6 +100,16 @@ public class ClauseModel {
         return clause;
     }
 
+    /**
+     * Adds all the relevant information to the clause
+     * Once all items for the clause have been created, it's all added to the clause
+     * Also checks for tense and creates a verb phrase out of a preposition if there are currently no verb phrases
+     * @param clause the clause so far
+     * @param NPs the noun phrases
+     * @param VPs the verb phrases
+     * @param prep the preposition
+     * @return the fully formed clause
+     */
     private Clause addToClause(Clause clause, ArrayList<NounPhrase> NPs, ArrayList<VerbPhrase> VPs, String prep) {
         if(VPs.size() > 0) {
             clause.setVPs(VPs);
@@ -99,6 +127,13 @@ public class ClauseModel {
         return clause;
     }
 
+    /**
+     * This method will assign a tense to a clause, unless it's present tense or a time word already exists
+     * If any of the verbs in the clause have a past tense POS then it's past tense
+     * If there are any modal verbs, then the clause is future tense
+     * @param clause
+     * @return the same clause but possibly with a tense set
+     */
     private Clause checkForTense(Clause clause) {
         if(clause.getTimeFrame().equals("")) {
             Integer tense = 0;
@@ -130,6 +165,12 @@ public class ClauseModel {
         return clause;
     }
 
+    /**
+     * If there are no verb phrases within a clause then, if a preposition exists, a verb phrase is made from the preposition
+     *
+     * @param possible the preposition
+     * @return the new verb phrase made from the preposition
+     */
     private ArrayList<VerbPhrase> prepForVP(String possible) {
         ArrayList<VerbPhrase> VPs = new ArrayList<>();
         VerbPhrase newVP = this.vModel.createVP(this.clauseWords, possible,false,true);

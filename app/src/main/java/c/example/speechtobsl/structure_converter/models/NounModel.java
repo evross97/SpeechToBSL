@@ -13,6 +13,9 @@ import static c.example.speechtobsl.structure_converter.utils.POS.ADV;
 import static c.example.speechtobsl.structure_converter.utils.POS.DET;
 import static c.example.speechtobsl.structure_converter.utils.POS.PREP;
 
+/**
+ * Used to create and manipulate noun phrases.
+ */
 public class NounModel {
 
     private ArrayList<JSONObject> POSTags;
@@ -22,6 +25,13 @@ public class NounModel {
     private TagModel tagger;
     private ParseModel parser;
 
+    /**
+     * Instantiates a new noun model.
+     *
+     * @param tags     the POS tags
+     * @param parse    the dependency parse
+     * @param sentence the English sentence
+     */
     public NounModel(ArrayList<JSONObject> tags, ArrayList<JSONObject> parse, ArrayList<String> sentence){
         this.POSTags = tags;
         this.parse = parse;
@@ -30,6 +40,13 @@ public class NounModel {
         this.parser = new ParseModel(this.parse, this.tagger);
     }
 
+    /**
+     * Create a new noun phrase using the noun given and other words that are linked to it.
+     *
+     * @param clauseWords all the words in the current clause
+     * @param noun        the noun
+     * @return the noun phrase
+     */
     public NounPhrase createNP(ArrayList<String> clauseWords, String noun) {
         NounPhrase NP = new NounPhrase(noun);
         //Adjectives
@@ -91,6 +108,12 @@ public class NounModel {
         return NP;
     }
 
+    /**
+     * Retrieves the singular form of the noun from the tagger
+     *
+     * @param plural the plural form of the noun
+     * @return the singular form of the noun
+     */
     private String getSingular(String plural) {
         String sing = "";
         try {
@@ -102,6 +125,14 @@ public class NounModel {
         return sing;
     }
 
+    /**
+     * If a preposition is being used as a verb in the clause, then it shouldn't also be present in any related noun phrases
+     * This method removes any occurrences of that preposition
+     *
+     * @param NPs  all noun phrases in the clause
+     * @param prep the preposition
+     * @return the NPs with the preposition removed
+     */
     public ArrayList<NounPhrase> removePreps(ArrayList<NounPhrase> NPs, String prep) {
         for(NounPhrase NP : NPs) {
             if(NP.getPreposition().equals(prep)) {

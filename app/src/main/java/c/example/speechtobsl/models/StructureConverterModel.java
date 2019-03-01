@@ -12,6 +12,9 @@ import c.example.speechtobsl.structure_converter.models.TagModel;
 import c.example.speechtobsl.structure_converter.utils.POS;
 
 
+/**
+ * The model that converts the English sentence into a BSL sentence.
+ */
 public class StructureConverterModel {
 
     /**
@@ -34,7 +37,7 @@ public class StructureConverterModel {
      * 2. Add NP list
      * 3. Add VP list
      * 4. Add index to clause
-     * 5. Add  time frame
+     * 5. Add time frame
      *
      * Join Clauses
      */
@@ -48,6 +51,9 @@ public class StructureConverterModel {
     private TagModel tagger;
     private ClauseModel cModel;
 
+    /**
+     * Instantiates a new structure converter model.
+     */
     public StructureConverterModel() {
         this.sentence = new ArrayList<>();
         this.POSTags = new ArrayList<>();
@@ -55,10 +61,22 @@ public class StructureConverterModel {
 
     }
 
+    /**
+     * Gets all the POS tags for the current sentence
+     *
+     * @return the POS tags
+     */
     public ArrayList<JSONObject> getPOSTags() {
         return this.POSTags;
     }
 
+    /**
+     * Converts an English sentence into a BSL sentence
+     *
+     * @param englishParsedText the parsed English sentence
+     * @param originalText      the original English sentence
+     * @return the BSL sentence
+     */
     public ArrayList<String> convertSentence(JSONObject englishParsedText, String originalText) {
         this.POSTags.clear();
         this.parse.clear();
@@ -70,6 +88,12 @@ public class StructureConverterModel {
         return this.sentence;
     }
 
+    /**
+     * Extracts the dependency parse and the POS tags from the server response
+     *
+     * @param englishParsedText
+     * @param originalText
+     */
     private void extractData(JSONObject englishParsedText, String originalText) {
         this.englishText = new ArrayList<>(Arrays.asList(originalText.split(" ")));
         try {
@@ -84,6 +108,12 @@ public class StructureConverterModel {
         }
     }
 
+    /**
+     * Converts a JSON array to an array of JSON objects
+     * Used to manipulate the POS tags and parse into more manageable data structures
+     * @param jsonArray
+     * @return the array of objects
+     */
     private ArrayList<JSONObject> toArrayList(JSONArray jsonArray) {
         ArrayList<JSONObject> arrayList = new ArrayList<>();
         for(int i = 0; i < jsonArray.length(); i++) {
@@ -96,6 +126,10 @@ public class StructureConverterModel {
         return arrayList;
     }
 
+    /**
+     * Creates BSL clauses from the English sentence
+     * Adds all words to a list and once a connective/the end of the sentence is reached, a new clause is created from the list
+     */
     private void createClauses() {
         ArrayList<String> currentClauseWords = new ArrayList<>();
         Integer clauseIndex = 0;

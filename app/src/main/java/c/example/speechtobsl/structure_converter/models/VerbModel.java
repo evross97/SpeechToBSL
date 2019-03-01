@@ -11,6 +11,9 @@ import c.example.speechtobsl.structure_converter.entities.VerbPhrase;
 import static c.example.speechtobsl.structure_converter.utils.POS.ADV;
 import static c.example.speechtobsl.structure_converter.utils.POS.MDL;
 
+/**
+ * Used to create and manipulate verb phrases.
+ */
 public class VerbModel {
 
     private ArrayList<JSONObject> POSTags;
@@ -22,6 +25,13 @@ public class VerbModel {
 
     private final ArrayList<String> excludedAdverbs = new ArrayList<>(Arrays.asList("N'T","NOT"));
 
+    /**
+     * Instantiates a new Verb model.
+     *
+     * @param tags     the POS tags
+     * @param parse    the parse of the sentence
+     * @param sentence the English sentence
+     */
     public VerbModel(ArrayList<JSONObject> tags, ArrayList<JSONObject> parse, ArrayList<String> sentence) {
         this.POSTags = tags;
         this.parse = parse;
@@ -30,6 +40,15 @@ public class VerbModel {
         this.parser = new ParseModel(this.parse,this.tagger);
     }
 
+    /**
+     * Create a new verb phrase.
+     *
+     * @param clauseWords the words in this current clause
+     * @param verb        the verb
+     * @param isModal     indicates if this verb is a modal verb
+     * @param isPrep      indicates if this verb is actually a preposition replacing a verb
+     * @return the verb phrase
+     */
     public VerbPhrase createVP(ArrayList<String> clauseWords, String verb, Boolean isModal, Boolean isPrep) {
         VerbPhrase VP = new VerbPhrase(verb);
         //Get lemma of verb
@@ -64,6 +83,7 @@ public class VerbModel {
      * These include verbs that only demonstrate the tense of the clause or auxiliary verbs that
      * shouldn't be signed
      * Only valid if there's more than one verb in a clause
+     *
      * @param VPs all verb phrases proposed for the clause
      * @return List of verbs that should be signed
      */
@@ -86,6 +106,11 @@ public class VerbModel {
         return newVPs;
     }
 
+    /**
+     * Retrieves all the auxiliary verbs from the dependency parse that aren't modal verbs
+     *
+     * @return list of auxiliary verbs
+     */
     private ArrayList<String> getAuxVerbs() {
         ArrayList<String> auxVerbs = new ArrayList<>();
         for(int i = 0; i < this.parse.size(); i++) {
