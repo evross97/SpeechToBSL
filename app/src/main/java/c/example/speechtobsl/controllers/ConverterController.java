@@ -17,7 +17,7 @@ public class ConverterController {
 
     private StanfordParserModel parser;
     private StructureConverterModel sConverter;
-    private final String LOG_TAG = "BSL - ConverterController";
+    private final String LOG_TAG = "BSL-ConverterController";
 
 
     /**
@@ -51,7 +51,7 @@ public class ConverterController {
             return BSLText;
         } catch(JSONException e) {
             Log.i(LOG_TAG, "Unable to convert parsed text to JSON: " + e.getMessage());
+            return new ArrayList<>();
         }
-        return null;
     }
 }
