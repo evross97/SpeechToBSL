@@ -1,7 +1,10 @@
-package c.example.structureconverter;
+package c.example.speechtobsl.structure_converter.entities;
 
 import java.util.ArrayList;
 
+/**
+ * The type noun phrase.
+ */
 public class NounPhrase {
 
     private String noun;
@@ -11,6 +14,11 @@ public class NounPhrase {
     private String preposition;
     private Boolean isSubject;
 
+    /**
+     * Instantiates a new noun phrase.
+     *
+     * @param nNoun the noun
+     */
     public NounPhrase(String nNoun) {
         this.noun = nNoun;
         this.plural = false;
@@ -19,59 +27,94 @@ public class NounPhrase {
         this.preposition = "";
         this.isSubject = false;
     }
-    public NounPhrase(String nNoun, Boolean nPlural, String nDeterminer, ArrayList<Adjective> nAdjectives, String nPreposition, Boolean nIsSubject) {
+
+    /**
+     * Instantiates a new noun phrase.
+     *
+     * @param nNoun  the noun
+     * @param plural indicates whether the noun is a plural
+     * @param det    the determiner
+     * @param adjs   the adjectives
+     * @param prep   the preposition
+     * @param subj   indicates whether the noun is the subject of the clause
+     */
+    public NounPhrase(String nNoun, Boolean plural, String det, ArrayList<Adjective> adjs, String prep, Boolean subj) {
         this.noun = nNoun;
-        this.plural = nPlural;
-        this.determiner = nDeterminer;
-        this.adjectives = nAdjectives;
-        this.preposition = nPreposition;
-        this.isSubject = nIsSubject;
+        this.plural = plural;
+        this.determiner = det;
+        this.adjectives = adjs;
+        this.preposition = prep;
+        this.isSubject = subj;
     }
 
-    public String getNoun() {
-        return noun;
-    }
-
+    /**
+     * Sets noun.
+     *
+     * @param noun the noun
+     */
     public void setNoun(String noun) {
         this.noun = noun;
     }
 
-    public Boolean getPlural() {
-        return plural;
-    }
-
+    /**
+     * Sets if the noun is a plural
+     *
+     * @param plural the plural
+     */
     public void setPlural(Boolean plural) {
         this.plural = plural;
     }
 
-    public String getDeterminer() {
-        return determiner;
-    }
-
+    /**
+     * Sets determiner of noun.
+     *
+     * @param determiner the determiner
+     */
     public void setDeterminer(String determiner) {
         this.determiner = determiner;
     }
 
-    public ArrayList<Adjective> getAdjectives() {
-        return adjectives;
-    }
-
+    /**
+     * Sets adjectives.
+     *
+     * @param adjectives the adjectives
+     */
     public void setAdjectives(ArrayList<Adjective> adjectives) {
         this.adjectives = adjectives;
     }
 
+    /**
+     * Gets preposition.
+     *
+     * @return the preposition
+     */
     public String getPreposition() {
         return preposition;
     }
 
+    /**
+     * Sets preposition.
+     *
+     * @param preposition the preposition
+     */
     public void setPreposition(String preposition) {
         this.preposition = preposition;
     }
 
+    /**
+     * Gets whether the noun is the subject of the clause
+     *
+     * @return is the noun the subject
+     */
     public Boolean isSubject() {
         return isSubject;
     }
 
+    /**
+     * Sets whether the noun is the subject of the clause
+     *
+     * @param subject the subject
+     */
     public void setSubject(Boolean subject) {
         isSubject = subject;
     }
@@ -90,6 +133,11 @@ public class NounPhrase {
         return true;
     }
 
+    /**
+     * Converts the noun phrase into a list in the correct BSL order
+     *
+     * @return the array list
+     */
     public ArrayList<String> toArrayString() {
         ArrayList<String> NP = new ArrayList<>();
         //preposition

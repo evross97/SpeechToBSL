@@ -1,10 +1,7 @@
 package c.example.speechtobsl.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -12,6 +9,9 @@ import java.util.ArrayList;
 
 import c.example.speechtobsl.entities.Image;
 
+/**
+ * The view that sends instructions to the Sign Activity
+ */
 public class SignView {
 
     private final Context appCtx;
@@ -19,13 +19,24 @@ public class SignView {
     private Integer currentImageIndex;
     private Intent intent;
 
+    /**
+     * Instantiates a new Sign view.
+     *
+     * @param ctx the context - needed to send images to activity
+     */
     public SignView(Context ctx) {
         this.appCtx = ctx;
         this.BSLImages = new ArrayList<>();
         this.intent = new Intent("signView");
     }
 
+    /**
+     * Show sequence of BSL images with 0.1 seconds inbetween each image
+     *
+     * @param images all BSL signs to be shown
+     */
     public void showSequence(ArrayList<Image> images) {
+        this.BSLImages.clear();
         this.BSLImages = images;
         this.currentImageIndex = 0;
         new Handler().postDelayed(new Runnable() {
@@ -36,13 +47,17 @@ public class SignView {
         }, 100);
     }
 
+    /**
+     * Works out what type of image is to be shown next and sends it to the activity
+     * - BSL sign - sends image and description
+     * - Blank - break inbetween signs
+     * Type ofimage also determines how long wait should be before next sign is shown
+     */
     private void nextImage() {
-        System.out.println(currentImageIndex);
         Integer delayTime = 1000;
         if(currentImageIndex < this.BSLImages.size()) {
             Image currentImage = this.BSLImages.get(currentImageIndex);
             if(currentImage.getImage() != null) {
-                System.out.println(currentImage.getImage() + " " + currentImage.getDesc());
                 //send image
                 this.intent.putExtra("command", "image");
                 this.intent.putExtra("image", currentImage.getImage());

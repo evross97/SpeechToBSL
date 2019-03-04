@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import c.example.speechtobsl.R;
 
+/**
+ * Activity that shows the sequence of BSL signs to the user
+ */
 public class SignViewerActivity extends AppCompatActivity{
 
     private ImageView pic;
@@ -21,6 +24,10 @@ public class SignViewerActivity extends AppCompatActivity{
 
     private BroadcastReceiver receiver;
 
+    /**
+     * Creates the activity screen and sets up the broadcast receiver to receive signs
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,26 +53,48 @@ public class SignViewerActivity extends AppCompatActivity{
         };
     }
 
+    /**
+     * Registers the receiver
+     */
     @Override
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(this.receiver, new IntentFilter("signView"));
     }
 
+    /**
+     * Unregisters the receiver
+     */
     @Override
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(this.receiver);
     }
 
+    /**
+     * Sets BSL image of current sign.
+     *
+     * @param image the image
+     */
     public void setImage(Bitmap image) {
         this.pic.setImageBitmap(image);
     }
 
+    /**
+     * Sets name of current sign
+     *
+     * @param desc the name
+     */
     public void setDesc(String desc) {
         this.desc.setText(desc);
     }
 
+    /**
+     * Sets image background - used to show the end of one sign and beginning of next
+     * Often helpful when fingerspelling words - blank screen will be shown for longer to indicate end of word
+     *
+     * @param color the background color
+     */
     public void setImageBackground(int color) {
         this.pic.setImageResource(color);
     }

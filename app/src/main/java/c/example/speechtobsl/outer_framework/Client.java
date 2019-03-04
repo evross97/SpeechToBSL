@@ -10,15 +10,23 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Sends client requests to specified IP addresses
+ * Used to get parse of sentence from Stanford server and synonyms from Oxford Dictionary API
+ */
 public class Client {
 
     private Context appCtx;
     private Intent localIntent = new Intent("client");
 
+    /**
+     * Instantiates a new Client.
+     */
     public Client() {
     }
 
     /**
+     * Send request and return the response
      *
      * @param params
      * 0. The request method
@@ -26,6 +34,7 @@ public class Client {
      * 2. The port number
      * 3. Extra parameters for end of URL
      * 4. Message to send (only for POST requests)
+     * 
      * @return The response from the server
      */
     public String sendRequest(String[] params) {

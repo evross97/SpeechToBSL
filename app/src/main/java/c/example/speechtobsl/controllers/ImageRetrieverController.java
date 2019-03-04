@@ -2,40 +2,65 @@ package c.example.speechtobsl.controllers;
 
 import android.content.Context;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import c.example.speechtobsl.entities.Image;
 import c.example.speechtobsl.models.DatabaseModel;
 import c.example.speechtobsl.models.SynonymsModel;
+import c.example.speechtobsl.structure_converter.models.TagModel;
 
+/**
+ * Converts a BSL sentence into a set of images of BSL signs
+ */
 public class ImageRetrieverController {
 
     DatabaseModel db;
     ArrayList<Image> allImages;
+    TagModel tagger;
 
+    /**
+     * Instantiates a new image retriever controller.
+     *
+     * @param ctx the context - needed by database
+     */
     public ImageRetrieverController(Context ctx) {
         this.db = new DatabaseModel(ctx);
         this.allImages = new ArrayList<>();
     }
 
-    public ArrayList<Image> getImageSentence(ArrayList<String> sentence) {
+    /**
+     * Converts a list of English words into a list of BSL images
+     *
+     * @param BSLSentence   the sentence in written BSL
+     * @param tags          the POS tags
+     * @param splitSentence the original English text
+     * @return the BSL sentence in images
+     */
+    public ArrayList<Image> getImageSentence(ArrayList<String> BSLSentence, ArrayList<JSONObject> tags, ArrayList<String> splitSentence) {
+        this.tagger = new TagModel(tags,splitSentence);
         ArrayList<Image> images = new ArrayList<>();
-        this.allImages = db.getAllImages(sentence);
-        for(String word : sentence) {
+        this.allImages = db.getAllImages(BSLSentence);
+        for(String word : BSLSentence) {
             images.addAll(this.getSigns(word));
         }
         return images;
     }
 
+    /**
+     * Gets the signs required for a given English word
+     * Could be the exact sign for that word, a sign for a synonym of that word, or the word fingerspellt
+     * @param word
+     * @return a list of images to display to sign the given word
+     */
     private ArrayList<Image> getSigns(String word) {
         ArrayList<Image> finalSigns = new ArrayList<>();
         Image sign = db.getDBSignForWord(this.allImages, word);
         Boolean signFound = sign.getImage() != null;
         if(!signFound){
-            System.out.println("Need wordnet");
-            SynonymsModel synClient = new SynonymsModel();
+            SynonymsModel synClient = new SynonymsModel(this.tagger);
             ArrayList<String> synonyms = synClient.getSynonyms(word);
             if(synonyms.size() > 0) {
                 ArrayList<Image> synSigns = db.getAllImages(synonyms);
@@ -52,16 +77,19 @@ public class ImageRetrieverController {
                 signFound = false;
             }
             if(!signFound) {
-                System.out.println("Need fingerspelling");
                 finalSigns = this.fingerSpellWord(word);
             }
         } else {
-            System.out.println("First time");
             finalSigns.add(sign);
         }
         return finalSigns;
     }
 
+    /**
+     * Gets letters to spell the word in BSL
+     * @param word
+     * @return list of BSL letters
+     */
     private ArrayList<Image> fingerSpellWord(String word) {
         ArrayList<Image> letterSigns = new ArrayList<>();
         String[] lettersTemp = word.split("");

@@ -2,16 +2,28 @@ package c.example.speechtobsl.models;
 
 import c.example.speechtobsl.outer_framework.Client;
 
-public class ParserModel {
+/**
+ * Gets a Stanford parse of the English sentence from a server
+ */
+public class StanfordParserModel {
 
     Client client;
     String parsedResponse;
 
-    public ParserModel() {
+    /**
+     * Instantiates a new Stanford parser model.
+     */
+    public StanfordParserModel() {
         client = new Client();
         parsedResponse = null;
     }
 
+    /**
+     * Gets Stanford parse of sentence.
+     *
+     * @param speech the speech
+     * @return the parse
+     */
     public String getParse(String speech) {
         Thread thread = new Thread(new Runnable() {
             @Override
