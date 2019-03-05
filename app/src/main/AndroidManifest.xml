@@ -16,17 +16,26 @@
         <activity
             android:name=".outer_framework.SpeechInputActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".outer_framework.StartUpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".outer_framework.SignViewerActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".outer_framework.SpeechInputActivity"></activity>
+            android:parentActivityName=".outer_framework.SpeechInputActivity" />
+        <activity
+            android:name=".outer_framework.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".outer_framework.StartUpActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
