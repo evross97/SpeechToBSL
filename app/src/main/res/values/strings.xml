@@ -3,4 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="sign_viewer">Sign Viewer</string>
     <string name="title_activity_settings">Settings</string>
+
+    <string name="loading_page_intro">Welcome to </string>
 </resources>
