@@ -7,33 +7,40 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:theme="@style/Theme.AppCompat.NoActionBar"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".outer_framework.SpeechInputActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".outer_framework.StartUpActivity">
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".outer_framework.SignViewerActivity"
             android:label="@string/app_name"
             android:parentActivityName=".outer_framework.SpeechInputActivity" />
         <activity
+            android:name=".outer_framework.SettingsActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".outer_framework.SpeechInputActivity">
+        </activity>
+        <activity
             android:name=".outer_framework.StartUpActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
 
     </application>
 

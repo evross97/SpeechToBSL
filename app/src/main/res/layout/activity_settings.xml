@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".outer_framework.SettingsActivity">
+
+    <RelativeLayout
+        android:id="@+id/topLevel"
+        android:layout_width="366dp"
+        android:layout_height="88dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/boogaloo"
+            android:text="@string/settings"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="60sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottomLevel"
+        android:layout_width="365dp"
+        android:layout_height="343dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/written_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/boogaloo"
+            android:text="@string/writtenDesc"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="30sp" />
+
+        <Switch
+            android:id="@+id/written_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/written_description"
+            android:layout_centerHorizontal="true"
+            android:checked="true" />
+
+        <TextView
+            android:id="@+id/speed_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/written_switch"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/boogaloo"
+            android:text="@string/speedDesc"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/slow_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/speed_description"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="37dp"
+            android:layout_marginTop="0dp"
+            android:fontFamily="@font/boogaloo"
+            android:text="Slow"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/medium_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/speed_description"
+            android:fontFamily="@font/boogaloo"
+            android:text="Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/fast_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/speed_description"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="38dp"
+            android:layout_marginRight="38dp"
+            android:fontFamily="@font/boogaloo"
+            android:text="Fast"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="20sp" />
+
+
+        <SeekBar
+            android:id="@+id/speed_bar"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="298dp"
+            android:layout_height="53dp"
+            android:layout_below="@id/slow_speed"
+            android:layout_centerHorizontal="true"
+            android:max="2"
+            android:progress="1" />
+
+        <Button
+            android:id="@+id/button2"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/speed_bar"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorAccent"
+            android:fontFamily="@font/boogaloo"
+            android:onClick="onSave"
+            android:text="@string/saveButton"
+            android:textSize="24sp" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ToolbarTheme"
+        android:elevation="4dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+</android.support.constraint.ConstraintLayout>

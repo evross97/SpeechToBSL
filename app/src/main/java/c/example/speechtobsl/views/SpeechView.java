@@ -120,6 +120,21 @@ public class SpeechView implements RecognitionListener {
     }
 
     /**
+     * Tells main controller to replay the previously shown sign sequence
+     */
+    public void replaySequence() {
+        System.out.println("I'm going to replay: " + decodedSpeech);
+        this.mController.replaySequence();
+    }
+
+    /**
+     * Updates speed of sign sequence
+     */
+    public void updateSpeed(Integer speed) {
+        this.mController.updateSpeed(speed);
+    }
+
+    /**
      * Starts the recorder.
      */
     public void startListening() {

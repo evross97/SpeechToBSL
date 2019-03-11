@@ -42,9 +42,11 @@ public class ImageRetrieverController {
     public ArrayList<Image> getImageSentence(ArrayList<String> BSLSentence, ArrayList<JSONObject> tags, ArrayList<String> splitSentence) {
         this.tagger = new TagModel(tags,splitSentence);
         ArrayList<Image> images = new ArrayList<>();
-        this.allImages = db.getAllImages(BSLSentence);
-        for(String word : BSLSentence) {
-            images.addAll(this.getSigns(word));
+        if(BSLSentence != null  && BSLSentence.size() > 0) {
+            this.allImages = db.getAllImages(BSLSentence);
+            for(String word : BSLSentence) {
+                images.addAll(this.getSigns(word));
+            }
         }
         return images;
     }

@@ -1,8 +1,15 @@
 <resources>
-    <string name="app_name">Speech To BSL</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">SpeechToBSL</string>
     <string name="sign_viewer">Sign Viewer</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings">Output Settings</string>
 
-    <string name="loading_page_intro">Welcome to </string>
+
+    <string name="loading_page_intro">
+        "The aim of this app is to allow hearing people to communicate with the deaf community, even when they don\'t know British Sign Language.
+    You can use this app in everyday life or as a way to learn BSL - either way you're reducing the divide!"</string>
+
+    <string name="writtenDesc">Show written BSL under sign:</string>
+    <string name="speedDesc">Speed of BSL sequence:</string>
+    <string name="saveButton">Save</string>
 </resources>

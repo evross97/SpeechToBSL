@@ -1,14 +1,15 @@
 package c.example.speechtobsl.outer_framework;
 
-import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,7 +23,6 @@ import c.example.speechtobsl.views.SpeechView;
  */
 public class SpeechInputActivity extends AppCompatActivity implements SuccessListener{
 
-    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private final String LOG_TAG = "BSL App";
 
     private Button mRecordButton = null;
@@ -35,8 +35,12 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
     private Intent intent;
     private startLoading loading = null;
 
-    private boolean permissionToRecordAccepted = false;
-    private String[] permissions = {Manifest.permission.RECORD_AUDIO};
+    private Integer speed = 2;
+    private Boolean showText = true;
+    private BroadcastReceiver receiver;
+
+    private final int SETTINGS = 1;
+    private final int VIEWER = 2;
 
 
     /**
@@ -47,9 +51,10 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        intent = new Intent(this,SignViewerActivity.class);
 
-        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         mRecordButton = findViewById(R.id.record_button);
         mRecordText = findViewById(R.id.record_text);
         mLoadingText = findViewById(R.id.loading_text);
@@ -83,25 +88,6 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
     }
 
     /**
-     * Checks if app has permissions to record audio
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch(requestCode) {
-            case REQUEST_RECORD_AUDIO_PERMISSION:
-                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                break;
-        }
-        if(!permissionToRecordAccepted) {
-            finish();
-        }
-    }
-
-    /**
      * Starts recording the users speech and gives instructions about stopping recording
      *
      * @param start the start
@@ -122,8 +108,64 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
      */
     @Override
     public void onSuccess() {
-        startActivity(intent);
+        intent = new Intent(this,SignViewerActivity.class);
+        intent.putExtra("showText", this.showText);
+        intent.putExtra("speed", this.speed);
         loading.cancel(true);
+        startActivityForResult(intent, this.VIEWER);
+    }
+
+    /**
+     * User has hit something in the action bar
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(this,SettingsActivity.class);
+                settingsIntent.putExtra("showText", this.showText);
+                settingsIntent.putExtra("speed", this.speed);
+                startActivityForResult(settingsIntent, this.SETTINGS);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if(requestCode == this.SETTINGS) {
+            this.speed = intent.getIntExtra("speed", 2);
+            this.showText = intent.getBooleanExtra("showText", true);
+            speech.updateSpeed(speed);
+
+        }
+        if(requestCode == this.VIEWER) {
+            System.out.println("IN VIEWER: " + resultCode);
+            if(resultCode == RESULT_CANCELED) {
+                mRecordButton.setVisibility(View.VISIBLE);
+                mRecordText.setVisibility(View.VISIBLE);
+                mLoadingText.setVisibility(View.INVISIBLE);
+                loading.cancel(true);
+            } else {
+                Boolean replay = intent.getBooleanExtra("replay", false);
+                if(replay) {
+                    speech.replaySequence();
+                    this.onSuccess();
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     /**
@@ -149,9 +191,6 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            mRecordButton.setVisibility(View.VISIBLE);
-            mRecordText.setVisibility(View.VISIBLE);
-            mLoadingText.setVisibility(View.INVISIBLE);
         }
 
         /**

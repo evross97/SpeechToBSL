@@ -57,4 +57,19 @@ public class MainController {
         this.signView.showSequence(signs);
     }
 
+    /**
+     * Tells the sign view to repeat the previous sequence
+     */
+    public void replaySequence() {
+        System.out.println("I'm going to replay");
+        this.signView.replaySequence();
+    }
+
+    /**
+     * Tells the sign view the new speed to play the sequence at
+     */
+    public void updateSpeed(Integer speed) {
+        this.signView.speedUpdate(speed);
+    }
+
 }
