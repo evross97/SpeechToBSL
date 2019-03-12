@@ -17,7 +17,7 @@ public class ConverterController {
 
     private StanfordParserModel parser;
     private StructureConverterModel sConverter;
-    private final String LOG_TAG = "BSL - ConverterController";
+    private final String LOG_TAG = "BSL App - ConverterController";
 
 
     /**

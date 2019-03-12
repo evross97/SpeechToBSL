@@ -1,5 +1,7 @@
 package c.example.speechtobsl.structure_converter.models;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,6 +13,8 @@ import c.example.speechtobsl.structure_converter.utils.POS;
  * Extracts required information from the dependency parse of the sentence
  */
 public class ParseModel {
+
+    private final String LOG_TAG = "BSL App - ParseModel";
 
     private ArrayList<JSONObject> parse;
 
@@ -51,10 +55,9 @@ public class ParseModel {
                     linkedWords.add(currentName);
                 }
             } catch(JSONException e) {
-                System.out.println("Failed to extract relevant dependencies from parse: " + e.getMessage());
+                Log.i(LOG_TAG,"Failed to extract relevant dependencies from parse: " + e.getMessage());
             }
         }
-
         return linkedWords;
     }
 
@@ -76,7 +79,7 @@ public class ParseModel {
                 }
 
             } catch(JSONException e) {
-                System.out.println("Failed to extract dependencies from parse: " + e.getMessage());
+                Log.i(LOG_TAG,"Failed to extract dependencies from parse: " + e.getMessage());
             }
         }
         return links;

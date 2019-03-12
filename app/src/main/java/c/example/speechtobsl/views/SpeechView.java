@@ -25,7 +25,7 @@ public class SpeechView implements RecognitionListener {
 
     private Context appCtx;
 
-    private final String LOG_TAG = "BSL App";
+    private final String LOG_TAG = "BSL App - SpeechView";
 
     /**
      * Instantiates a new Speech view.
@@ -122,7 +122,6 @@ public class SpeechView implements RecognitionListener {
      * Tells main controller to replay the previously shown sign sequence
      */
     public void replaySequence() {
-        System.out.println("I'm going to replay: " + decodedSpeech);
         this.mController.replaySequence();
     }
 

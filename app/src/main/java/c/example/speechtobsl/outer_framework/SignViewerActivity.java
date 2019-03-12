@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
@@ -21,8 +19,6 @@ import com.bumptech.glide.Glide;
 
 import c.example.speechtobsl.R;
 
-import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
-
 /**
  * Activity that shows the sequence of BSL signs to the user
  */
@@ -31,7 +27,6 @@ public class SignViewerActivity extends AppCompatActivity{
     private ImageView pic;
     private TextView desc;
     private ActionBar actionBar;
-    private Toolbar toolbar;
     private Button replayButton;
 
     private Boolean showText = true;
@@ -51,14 +46,15 @@ public class SignViewerActivity extends AppCompatActivity{
 
         Intent intent = getIntent();
         this.showText = intent.getBooleanExtra("showText", true);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.hide();
 
-        replayButton = findViewById(R.id.replay_button);
-        replayButton.setVisibility(View.GONE);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        this.actionBar = getSupportActionBar();
+        this.actionBar.setDisplayHomeAsUpEnabled(true);
+        this.actionBar.hide();
+
+        this.replayButton = findViewById(R.id.replay_button);
+        this.replayButton.setVisibility(View.GONE);
 
         this.receiver = new BroadcastReceiver() {
             @Override

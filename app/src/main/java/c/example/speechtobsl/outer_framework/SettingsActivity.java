@@ -1,7 +1,6 @@
 package c.example.speechtobsl.outer_framework;
 
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,14 +9,12 @@ import android.widget.Switch;
 
 import c.example.speechtobsl.R;
 
-import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
-
 /**
  * Settings screen to allow the user to control the speed of the sign sequence and whether any text is shown underneath the signs
  */
 public class SettingsActivity extends AppCompatActivity {
 
-    private Integer speedValue = 2;
+    private Integer speedValue = 1;
     private Boolean showText = true;
 
     private SeekBar speed;
@@ -28,9 +25,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        speed = findViewById(R.id.speed_bar);
-        speed.setProgress(getIntent().getIntExtra("speed",2));
-        speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        this.speed = findViewById(R.id.speed_bar);
+        this.speed.setProgress(getIntent().getIntExtra("speed",1));
+        this.speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 speedValue = i;
@@ -43,8 +40,8 @@ public class SettingsActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        textSwitch = findViewById(R.id.written_switch);
-        textSwitch.setChecked(getIntent().getBooleanExtra("showText", true));
+        this.textSwitch = findViewById(R.id.written_switch);
+        this.textSwitch.setChecked(getIntent().getBooleanExtra("showText", true));
     }
 
     /**

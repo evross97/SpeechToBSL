@@ -1,5 +1,7 @@
 package c.example.speechtobsl.structure_converter.models;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +15,8 @@ import static c.example.speechtobsl.structure_converter.utils.POS.*;
  * Extracts required information from the tags of the sentence
  */
 public class TagModel {
+
+    private final String LOG_TAG = "BSL App - TagModel";
 
     private ArrayList<JSONObject> POSTags;
     private ArrayList<String> englishText;
@@ -52,7 +56,7 @@ public class TagModel {
                     break;
                 }
             } catch(JSONException e) {
-                System.out.println("Can't get exact tag for " + word + ": " + e.getMessage());
+                Log.i(LOG_TAG,"Can't get exact tag for " + word + ": " + e.getMessage());
             }
         }
         return finalTag;
@@ -107,7 +111,7 @@ public class TagModel {
                 }
             }
         } catch(JSONException e) {
-            System.out.println("Can't get general tag for " + word + ": " + e.getMessage());
+            Log.i(LOG_TAG,"Can't get general tag for " + word + ": " + e.getMessage());
         }
         return finalTag;
     }

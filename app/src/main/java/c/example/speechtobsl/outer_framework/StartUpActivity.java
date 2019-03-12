@@ -30,7 +30,6 @@ public class StartUpActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ActivityCompat.requestPermissions(this, permissions, PERMISSION);
-
     }
 
     /**
@@ -58,6 +57,8 @@ public class StartUpActivity extends AppCompatActivity {
      */
     public void startMain(View view) {
         Intent main = new Intent(this, SpeechInputActivity.class);
+        main.putExtra("speed", 1);
+        main.putExtra("showText", true);
         startActivity(main);
     }
 }

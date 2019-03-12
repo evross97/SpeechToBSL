@@ -59,7 +59,6 @@ public class Client {
 
             //Response - input
             BufferedReader bf = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
             String line;
             while ((line=bf.readLine())!=null) {
                 sb.append(line);

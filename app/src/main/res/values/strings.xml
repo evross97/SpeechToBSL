@@ -9,7 +9,17 @@
         "The aim of this app is to allow hearing people to communicate with the deaf community, even when they don\'t know British Sign Language.
     You can use this app in everyday life or as a way to learn BSL - either way you're reducing the divide!"</string>
 
-    <string name="writtenDesc">Show written BSL under sign:</string>
-    <string name="speedDesc">Speed of BSL sequence:</string>
-    <string name="saveButton">Save</string>
+    <string name="written_desc">Show written BSL under sign:</string>
+    <string name="speed_desc">Speed of BSL sequence:</string>
+    <string name="save_button">Save</string>
+    <string name="logo_desc">Logo</string>
+    <string name="go_button">Go!</string>
+    <string name="sign_view_desc">Sign</string>
+
+    <string name="slow_speed">Slow</string>
+    <string name="medium_speed">Medium</string>
+    <string name="fast_speed">Fast</string>
+
+    <string name="start_recording_msg">Press the red button to start recording</string>
+    <string name="loading">Loading</string>
 </resources>

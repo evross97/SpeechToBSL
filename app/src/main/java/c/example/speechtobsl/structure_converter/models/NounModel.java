@@ -1,5 +1,7 @@
 package c.example.speechtobsl.structure_converter.models;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,6 +19,8 @@ import static c.example.speechtobsl.structure_converter.utils.POS.PREP;
  * Used to create and manipulate noun phrases.
  */
 public class NounModel {
+
+    private final String LOG_TAG = "BSL App - NounModel";
 
     private ArrayList<JSONObject> POSTags;
     private ArrayList<JSONObject> parse;
@@ -101,7 +105,7 @@ public class NounModel {
                 plural = true;
             }
         } catch(JSONException e) {
-            System.out.println("Unable to check if noun ("+ noun + ") is plural: " + e.getMessage());
+            Log.i(LOG_TAG,"Unable to check if noun ("+ noun + ") is plural: " + e.getMessage());
         }
         return plural;
     }
@@ -125,9 +129,8 @@ public class NounModel {
                         break;
                     }
                 }
-
             } catch(JSONException e) {
-                System.out.println("Failed to extract governor from parse: " + e.getMessage());
+                Log.i(LOG_TAG,"Failed to extract governor from parse: " + e.getMessage());
             }
         }
         return nsubj;
@@ -145,7 +148,7 @@ public class NounModel {
             JSONObject currentTag = this.tagger.getExactTag(plural,true);
             sing = currentTag.getString("lemma");
         } catch (JSONException e) {
-            System.out.println("Failed to get singular of noun: " + e.getMessage());
+            Log.i(LOG_TAG,"Failed to get singular of noun: " + e.getMessage());
         }
         return sing;
     }

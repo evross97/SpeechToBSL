@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/boogaloo"
-            android:text="@string/writtenDesc"
+            android:text="@string/written_desc"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textSize="30sp" />
 
@@ -63,7 +63,7 @@
             android:layout_below="@id/written_switch"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/boogaloo"
-            android:text="@string/speedDesc"
+            android:text="@string/speed_desc"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textSize="30sp" />
 
@@ -76,7 +76,7 @@
             android:layout_marginStart="37dp"
             android:layout_marginTop="0dp"
             android:fontFamily="@font/boogaloo"
-            android:text="Slow"
+            android:text="@string/slow_speed"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textSize="20sp" />
 
@@ -84,10 +84,10 @@
             android:id="@+id/medium_speed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/speed_description"
+            android:layout_centerHorizontal="true"
             android:fontFamily="@font/boogaloo"
-            android:text="Medium"
+            android:text="@string/medium_speed"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textSize="20sp" />
 
@@ -97,12 +97,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/speed_description"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="38dp"
-            android:layout_marginRight="38dp"
             android:fontFamily="@font/boogaloo"
-            android:text="Fast"
+            android:text="@string/fast_speed"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textSize="20sp" />
 
@@ -127,7 +125,7 @@
             android:background="@color/colorAccent"
             android:fontFamily="@font/boogaloo"
             android:onClick="onSave"
-            android:text="@string/saveButton"
+            android:text="@string/save_button"
             android:textSize="24sp" />
 
     </RelativeLayout>

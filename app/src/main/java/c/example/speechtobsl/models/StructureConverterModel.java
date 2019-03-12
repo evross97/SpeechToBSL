@@ -1,5 +1,7 @@
 package c.example.speechtobsl.models;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +18,8 @@ import c.example.speechtobsl.structure_converter.utils.POS;
  * The model that converts the English sentence into a BSL sentence.
  */
 public class StructureConverterModel {
+
+    private final String LOG_TAG = "BSL App - StructureConverterModel";
 
     private ArrayList<JSONObject> POSTags;
     private ArrayList<JSONObject> parse;
@@ -71,7 +75,7 @@ public class StructureConverterModel {
             this.POSTags = this.toArrayList((JSONArray)sentence.get("tokens"));
             this.parse = this.toArrayList((JSONArray)sentence.get("enhancedPlusPlusDependencies"));
         } catch(JSONException e) {
-            System.out.println("Failed to extract tags and parse of sentence: " + e.getMessage());
+            Log.i(LOG_TAG,"Failed to extract tags and parse of sentence: " + e.getMessage());
         }
     }
 
@@ -87,7 +91,7 @@ public class StructureConverterModel {
             try {
                 arrayList.add((JSONObject)jsonArray.get(i));
             } catch(JSONException e) {
-                System.out.println("Failed to convert to arraylist: " + e.getMessage());
+                Log.i(LOG_TAG,"Failed to convert to arraylist: " + e.getMessage());
             }
         }
         return arrayList;

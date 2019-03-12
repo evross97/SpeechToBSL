@@ -49,8 +49,7 @@ public class SignView {
             public void run() {
                 nextImage();
             }
-        }, 100);
-        System.out.println(this.BSLImages.size());
+        }, this.delayTime);
     }
 
     /**
@@ -99,7 +98,6 @@ public class SignView {
      * Replay button has been pressed, call nextImage after resetting the current image index so that all the signs are displayed again
      */
     public void replaySequence() {
-        System.out.println("I'm going to replay" + this.BSLImages.size());
         this.currentImageIndex = 0;
         new Handler().postDelayed(new Runnable() {
             @Override

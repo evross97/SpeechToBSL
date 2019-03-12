@@ -22,10 +22,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/boogaloo"
-            android:text="TextView"
+            android:text="@string/start_recording_msg"
             android:textAlignment="center"
-            android:textSize="30sp"
-            tools:text="Press the red button to start recording" />
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/loading_text"
@@ -33,9 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/boogaloo"
-            android:text="TextView"
-            android:textSize="36sp"
-            tools:text="Loading..." />
+            android:text="@string/loading"
+            android:textSize="36sp" />
 
     </RelativeLayout>
 

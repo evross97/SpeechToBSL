@@ -1,6 +1,5 @@
 package c.example.speechtobsl.outer_framework;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,11 +18,9 @@ import c.example.speechtobsl.views.SpeechView;
 
 
 /**
- * The first activity show to user, from here
+ * Main screen - used for speech input and to access the settings page
  */
 public class SpeechInputActivity extends AppCompatActivity implements SuccessListener{
-
-    private final String LOG_TAG = "BSL App";
 
     private Button mRecordButton = null;
     private TextView mRecordText = null;
@@ -32,12 +29,10 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
 
 
     private SpeechView speech = null;
-    private Intent intent;
     private startLoading loading = null;
 
-    private Integer speed = 2;
+    private Integer speed = 1;
     private Boolean showText = true;
-    private BroadcastReceiver receiver;
 
     private final int SETTINGS = 1;
     private final int VIEWER = 2;
@@ -55,14 +50,14 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mRecordButton = findViewById(R.id.record_button);
-        mRecordText = findViewById(R.id.record_text);
-        mLoadingText = findViewById(R.id.loading_text);
+        this.mRecordButton = findViewById(R.id.record_button);
+        this.mRecordText = findViewById(R.id.record_text);
+        this.mLoadingText = findViewById(R.id.loading_text);
 
-        mLoadingText.setVisibility(View.INVISIBLE);
-        mRecordText.setText("Press the red button to start recording");
-        mLoadingText.setText("Loading...");
-        mRecordButton.setOnClickListener(new View.OnClickListener() {
+        this.mLoadingText.setVisibility(View.INVISIBLE);
+        this.mRecordText.setText("Press the red button to start recording");
+        this.mLoadingText.setText("Loading...");
+        this.mRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(view.getId() == R.id.record_button) {
@@ -73,22 +68,12 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
             }
         });
 
-        speech = new SpeechView(getApplicationContext(), this);
-        loading = new startLoading();
+        this.speech = new SpeechView(getApplicationContext(), this);
+        this.loading = new startLoading();
 
         Intent received = getIntent();
-        this.speed = received.getIntExtra("speed", 2);
+        this.speed = received.getIntExtra("speed", 1);
         this.showText = received.getBooleanExtra("showText", true);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     /**
@@ -98,12 +83,12 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
      */
     public void onRecord(boolean start) {
         if(start) {
-            mRecordText.setText("Press the button again to stop recording");
-            speech.startListening();
+            this.mRecordText.setText("Press the button again to stop recording");
+            this.speech.startListening();
         } else {
-            mRecordText.setText("Press the red button to start recording");
-            speech.stopListening();
-            loading.execute();
+            this.mRecordText.setText("Press the red button to start recording");
+            this.speech.stopListening();
+            this.loading.execute();
         }
     }
 
@@ -112,9 +97,9 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
      */
     @Override
     public void onSuccess() {
-        intent = new Intent(this,SignViewerActivity.class);
+        Intent intent = new Intent(this,SignViewerActivity.class);
         intent.putExtra("showText", this.showText);
-        loading.cancel(true);
+        this.loading.cancel(true);
         startActivityForResult(intent, this.VIEWER);
     }
 
@@ -135,20 +120,24 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
 
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
+    /**
+     * Result has been sent back from activity - either settings page or sign viewer page
+     * @param requestCode
+     * @param resultCode
+     * @param intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if(requestCode == this.SETTINGS) {
             this.speed = intent.getIntExtra("speed", 2);
             this.showText = intent.getBooleanExtra("showText", true);
-            speech.updateSpeed(speed);
+            this.speech.updateSpeed(speed);
 
         }
         if(requestCode == this.VIEWER) {
-            System.out.println("IN VIEWER: " + resultCode);
             if(resultCode == RESULT_CANCELED) {
                 Intent restart = getIntent();
                 restart.putExtra("speed", this.speed);
@@ -158,7 +147,7 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
             } else {
                 Boolean replay = intent.getBooleanExtra("replay", false);
                 if(replay) {
-                    speech.replaySequence();
+                    this.speech.replaySequence();
                     this.onSuccess();
                 }
             }

@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
             android:layout_centerHorizontal="true"
-            android:contentDescription="logo"
+            android:contentDescription="@string/logo_desc"
             android:scaleType="fitStart"
             app:srcCompat="@drawable/logo_darker" />
 
@@ -71,7 +71,7 @@
             android:background="@color/colorAccent"
             android:fontFamily="@font/boogaloo"
             android:onClick="startMain"
-            android:text="Go!"
+            android:text="@string/go_button"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
