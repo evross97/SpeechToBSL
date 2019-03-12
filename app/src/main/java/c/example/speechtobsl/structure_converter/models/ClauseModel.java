@@ -62,7 +62,6 @@ public class ClauseModel {
             POS tag = this.tagger.getGeneralTag(word,true);
             switch (tag) {
                 case NOUN:
-                    System.out.println("Noun:" + word);
                     NounPhrase newNP = this.nModel.createNP(this.clauseWords, word);
                     NPs.add(newNP);
                     break;

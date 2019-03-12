@@ -27,7 +27,7 @@ public class DatabaseModel extends SQLiteAssetHelper {
      */
     public DatabaseModel(Context ctx) {
         super(ctx,dbName,null,dbVersion);
-        db = this.getReadableDatabase();
+        this.db = this.getReadableDatabase();
     }
 
     /**
@@ -39,7 +39,6 @@ public class DatabaseModel extends SQLiteAssetHelper {
      */
     public ArrayList<Image> getAllImages(ArrayList<String> sentence) {
         ArrayList<Image> allSigns = new ArrayList<>();
-        System.out.println("HI");
         ArrayList<String> questionMarks = new ArrayList<>();
         for(int i = 0; i < sentence.size(); i++) {
             sentence.set(i,sentence.get(i).toUpperCase());
@@ -78,5 +77,4 @@ public class DatabaseModel extends SQLiteAssetHelper {
         }
         return sign;
     }
-
 }

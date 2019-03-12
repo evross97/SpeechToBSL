@@ -43,7 +43,7 @@ public class ImageRetrieverController {
         this.tagger = new TagModel(tags,splitSentence);
         ArrayList<Image> images = new ArrayList<>();
         if(BSLSentence != null  && BSLSentence.size() > 0) {
-            this.allImages = db.getAllImages(BSLSentence);
+            this.allImages = this.db.getAllImages(BSLSentence);
             for(String word : BSLSentence) {
                 images.addAll(this.getSigns(word));
             }
@@ -59,7 +59,7 @@ public class ImageRetrieverController {
      */
     private ArrayList<Image> getSigns(String word) {
         ArrayList<Image> finalSigns = new ArrayList<>();
-        Image sign = db.getDBSignForWord(this.allImages, word);
+        Image sign = this.db.getDBSignForWord(this.allImages, word);
         Boolean signFound = sign.getImage() != null;
         if(!signFound){
             SynonymsModel synClient = new SynonymsModel(this.tagger);

@@ -7,34 +7,44 @@ public enum POS {
         /**
          * A noun.
          */
-        NOUN, /**
+        NOUN,
+        /**
          * A verb.
          */
-        VRB, /**
+        VRB,
+        /**
          * A determiner.
          */
-        DET, /**
+        DET,
+        /**
          * An adjective.
          */
-        ADJ, /**
+        ADJ,
+        /**
          * An adverb.
          */
-        ADV, /**
+        ADV,
+        /**
          * A connective.
          */
-        CONN, /**
+        CONN,
+        /**
          * A word to indicate time.
          */
-        TIM, /**
+        TIM,
+        /**
          * A modal verb.
          */
-        MDL, /**
+        MDL,
+        /**
          * A question word.
          */
-        QTN, /**
+        QTN,
+        /**
          * A preposition.
          */
-        PREP, /**
+        PREP,
+        /**
          * A word to be ignored.
          */
         NA

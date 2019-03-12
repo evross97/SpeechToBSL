@@ -56,8 +56,6 @@ public class SynonymsModel {
             });
             thread.start();
             thread.join();
-
-            System.out.println(this.syns);
         } catch(Exception e) {
             e.printStackTrace();
         }

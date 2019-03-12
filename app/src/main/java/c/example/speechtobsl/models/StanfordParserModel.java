@@ -14,8 +14,8 @@ public class StanfordParserModel {
      * Instantiates a new Stanford parser model.
      */
     public StanfordParserModel() {
-        client = new Client();
-        parsedResponse = null;
+        this.client = new Client();
+        this.parsedResponse = null;
     }
 
     /**
@@ -43,7 +43,6 @@ public class StanfordParserModel {
         } catch(InterruptedException e) {
             e.printStackTrace();
         }
-
-        return parsedResponse;
+        return this.parsedResponse;
     }
 }

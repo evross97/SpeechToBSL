@@ -75,6 +75,10 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
 
         speech = new SpeechView(getApplicationContext(), this);
         loading = new startLoading();
+
+        Intent received = getIntent();
+        this.speed = received.getIntExtra("speed", 2);
+        this.showText = received.getBooleanExtra("showText", true);
     }
 
     @Override
@@ -110,7 +114,6 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
     public void onSuccess() {
         intent = new Intent(this,SignViewerActivity.class);
         intent.putExtra("showText", this.showText);
-        intent.putExtra("speed", this.speed);
         loading.cancel(true);
         startActivityForResult(intent, this.VIEWER);
     }
@@ -147,10 +150,11 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         if(requestCode == this.VIEWER) {
             System.out.println("IN VIEWER: " + resultCode);
             if(resultCode == RESULT_CANCELED) {
-                mRecordButton.setVisibility(View.VISIBLE);
-                mRecordText.setVisibility(View.VISIBLE);
-                mLoadingText.setVisibility(View.INVISIBLE);
-                loading.cancel(true);
+                Intent restart = getIntent();
+                restart.putExtra("speed", this.speed);
+                restart.putExtra("showText", this.showText);
+                finish();
+                startActivity(restart);
             } else {
                 Boolean replay = intent.getBooleanExtra("replay", false);
                 if(replay) {
@@ -161,6 +165,11 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         }
     }
 
+    /**
+     * Add my customised menu to the toolbar of the app
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -182,23 +191,6 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
             mRecordButton.setVisibility(View.INVISIBLE);
             mRecordText.setVisibility(View.INVISIBLE);
             mLoadingText.setVisibility(View.VISIBLE);
-        }
-
-        /**
-         * Resets screen ready for next input
-         * @param aVoid
-         */
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-
-        /**
-         * Cancels task
-         */
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
         }
 
         /**
@@ -239,6 +231,7 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
                 }
                 SystemClock.sleep(100);
             }
+            cancel(true);
             return null;
         }
     }

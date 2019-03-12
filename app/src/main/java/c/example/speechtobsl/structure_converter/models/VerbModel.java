@@ -74,7 +74,6 @@ public class VerbModel {
             }
         }
         VP.setAdverbs(newAdverbs);
-        //System.out.println("VP: " + VP.toArrayString());
         return VP;
     }
 

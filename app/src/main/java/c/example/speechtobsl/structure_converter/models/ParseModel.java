@@ -39,7 +39,6 @@ public class ParseModel {
     public ArrayList<String> findLinks(ArrayList<String> clauseWords, String word, POS typeWanted) {
         ArrayList<JSONObject> possibleLinks = getLinkedParses(word);
         ArrayList<String> linkedWords = new ArrayList<>();
-        //check which related words are of the correct type
         for(int j = 0; j < possibleLinks.size(); j++) {
             JSONObject currentLink = possibleLinks.get(j);
             try {
@@ -67,7 +66,6 @@ public class ParseModel {
      */
     public ArrayList<JSONObject> getLinkedParses(String word) {
         ArrayList<JSONObject> links = new ArrayList<>();
-
         for(int i =0; i < this.parse.size(); i++) {
             JSONObject currentParse = this.parse.get(i);
             try {

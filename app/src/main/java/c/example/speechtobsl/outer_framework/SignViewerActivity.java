@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import c.example.speechtobsl.R;
 
 import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
@@ -33,7 +35,6 @@ public class SignViewerActivity extends AppCompatActivity{
     private Button replayButton;
 
     private Boolean showText = true;
-    private Integer speed = 2;
 
     private BroadcastReceiver receiver;
 
@@ -50,7 +51,6 @@ public class SignViewerActivity extends AppCompatActivity{
 
         Intent intent = getIntent();
         this.showText = intent.getBooleanExtra("showText", true);
-        this.speed = intent.getIntExtra("speed", 2);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
@@ -66,8 +66,7 @@ public class SignViewerActivity extends AppCompatActivity{
                 String command = intent.getStringExtra("command");
                 if(command.equals("image")) {
                     byte[] currentImage = intent.getByteArrayExtra("image");
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(currentImage,0,currentImage.length);
-                    setImage(bitmap);
+                    setImage(currentImage);
                 }
                 if(command.equals("image_background")) {
                     int color = intent.getIntExtra("data", 0);
@@ -110,8 +109,11 @@ public class SignViewerActivity extends AppCompatActivity{
      *
      * @param image the image
      */
-    public void setImage(Bitmap image) {
-        this.pic.setImageBitmap(image);
+    public void setImage(byte[] image) {
+        Glide
+                .with(this)
+                .load(image)
+                .into(this.pic);
     }
 
     /**
@@ -138,9 +140,7 @@ public class SignViewerActivity extends AppCompatActivity{
      * Shows the action bar and the replay button to give user options now that the sign sequence has finished
      */
     public void signsFinished() {
-        System.out.println("finished");
         this.actionBar.show();
-        System.out.println("showing action bar");
         this.replayButton.setVisibility(View.VISIBLE);
     }
 
@@ -149,7 +149,6 @@ public class SignViewerActivity extends AppCompatActivity{
      * @param view
      */
     public void replay(View view) {
-        System.out.println("HIT REPLAY");
         Intent main = new Intent();
         main.putExtra("replay", true);
         setResult(RESULT_OK, main);
