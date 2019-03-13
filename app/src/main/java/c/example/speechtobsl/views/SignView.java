@@ -20,7 +20,7 @@ public class SignView {
     private Intent intent;
 
     private Integer speed;
-    private Integer delayTime = 1000;
+    private Integer delayTime = 1500;
 
     /**
      * Instantiates a new Sign view.

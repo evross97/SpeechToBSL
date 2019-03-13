@@ -30,7 +30,7 @@ public class StanfordParserModel {
             public void run() {
                 parsedResponse = client.sendRequest(new String[]{
                         "POST",
-                        "http://192.168.0.15",
+                        "http://192.168.43.182",
                         "9000",
                         "/?properties=%7B%22annotators%22%3A%20%22tokenize%2Cssplit%2Cpos%2Cner%2Cdepparse%2Copenie%22%2C%20%22date%22%3A%20%222019-01-26T16%3A46%3A19%22%7D",
                         speech}
