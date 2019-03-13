@@ -1,5 +1,7 @@
 package c.example.speechtobsl.models;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +17,8 @@ import c.example.speechtobsl.structure_converter.utils.POS;
  * Gets all the possible synonyms for a word that has no exact match in the database using the Oxford Dictionary API
  */
 public class SynonymsModel {
+
+    private final String LOG_TAG = "BSL App - SynonymsModel";
 
     private ArrayList<String> syns;
     private Client thesaurus;
@@ -56,8 +60,6 @@ public class SynonymsModel {
             });
             thread.start();
             thread.join();
-
-            System.out.println(this.syns);
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -112,7 +114,7 @@ public class SynonymsModel {
                     }
                 }
             } catch(JSONException e) {
-                System.out.println("Couldn't extract synonyms from response: " + e.getLocalizedMessage());
+                Log.i(LOG_TAG,"Couldn't extract synonyms from response: " + e.getLocalizedMessage());
             }
         }
     }

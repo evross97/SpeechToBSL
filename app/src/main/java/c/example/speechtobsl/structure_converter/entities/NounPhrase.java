@@ -57,6 +57,15 @@ public class NounPhrase {
     }
 
     /**
+     * Gets if the noun is a plural
+     *
+     * @return true if the noun is a plural
+     */
+    public Boolean getPlural() {
+        return this.plural;
+    }
+
+    /**
      * Sets if the noun is a plural
      *
      * @param plural the plural

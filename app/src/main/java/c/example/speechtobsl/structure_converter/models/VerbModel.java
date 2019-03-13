@@ -1,5 +1,7 @@
 package c.example.speechtobsl.structure_converter.models;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,12 +18,14 @@ import static c.example.speechtobsl.structure_converter.utils.POS.MDL;
  */
 public class VerbModel {
 
+    private final String LOG_TAG = "BSL App - VerbModel";
+
     private ArrayList<JSONObject> POSTags;
     private ArrayList<JSONObject> parse;
     private ArrayList<String> englishText;
 
-    ParseModel parser;
-    TagModel tagger;
+    private ParseModel parser;
+    private TagModel tagger;
 
     private final ArrayList<String> excludedAdverbs = new ArrayList<>(Arrays.asList("N'T","NOT"));
 
@@ -57,7 +61,7 @@ public class VerbModel {
             String lemma = currentTag.getString("lemma");
             VP.setLemmaVerb(lemma);
         } catch(JSONException e) {
-            System.out.println("Couldn't get lemma of verb");
+            Log.i(LOG_TAG,"Couldn't get lemma of verb");
         }
         //Modal
         VP.setIsModal(isModal);
@@ -74,7 +78,6 @@ public class VerbModel {
             }
         }
         VP.setAdverbs(newAdverbs);
-        //System.out.println("VP: " + VP.toArrayString());
         return VP;
     }
 
@@ -124,7 +127,7 @@ public class VerbModel {
                     }
                 }
             } catch(JSONException e) {
-                System.out.println("Unable to find auxiliary verbs: " + e.getMessage());
+                Log.i(LOG_TAG,"Unable to find auxiliary verbs: " + e.getMessage());
             }
         }
         return auxVerbs;

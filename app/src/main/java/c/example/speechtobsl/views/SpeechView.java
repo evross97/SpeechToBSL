@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class SpeechView implements RecognitionListener {
 
     private Context appCtx;
 
-    private final String LOG_TAG = "BSL App";
+    private final String LOG_TAG = "BSL App - SpeechView";
 
     /**
      * Instantiates a new Speech view.
@@ -117,6 +116,20 @@ public class SpeechView implements RecognitionListener {
         ArrayList<String> matches = data.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         decodedSpeech = matches.get(0);
         mController.getBSL(decodedSpeech);
+    }
+
+    /**
+     * Tells main controller to replay the previously shown sign sequence
+     */
+    public void replaySequence() {
+        this.mController.replaySequence();
+    }
+
+    /**
+     * Updates speed of sign sequence
+     */
+    public void updateSpeed(Integer speed) {
+        this.mController.updateSpeed(speed);
     }
 
     /**

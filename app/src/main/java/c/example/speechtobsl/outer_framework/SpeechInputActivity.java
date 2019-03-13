@@ -1,14 +1,14 @@
 package c.example.speechtobsl.outer_framework;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,12 +18,9 @@ import c.example.speechtobsl.views.SpeechView;
 
 
 /**
- * The first activity show to user, from here
+ * Main screen - used for speech input and to access the settings page
  */
 public class SpeechInputActivity extends AppCompatActivity implements SuccessListener{
-
-    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
-    private final String LOG_TAG = "BSL App";
 
     private Button mRecordButton = null;
     private TextView mRecordText = null;
@@ -32,11 +29,13 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
 
 
     private SpeechView speech = null;
-    private Intent intent;
     private startLoading loading = null;
 
-    private boolean permissionToRecordAccepted = false;
-    private String[] permissions = {Manifest.permission.RECORD_AUDIO};
+    private Integer speed = 1;
+    private Boolean showText = true;
+
+    private final int SETTINGS = 1;
+    private final int VIEWER = 2;
 
 
     /**
@@ -47,17 +46,18 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        intent = new Intent(this,SignViewerActivity.class);
 
-        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
-        mRecordButton = findViewById(R.id.record_button);
-        mRecordText = findViewById(R.id.record_text);
-        mLoadingText = findViewById(R.id.loading_text);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        mLoadingText.setVisibility(View.INVISIBLE);
-        mRecordText.setText("Press the red button to start recording");
-        mLoadingText.setText("Loading...");
-        mRecordButton.setOnClickListener(new View.OnClickListener() {
+        this.mRecordButton = findViewById(R.id.record_button);
+        this.mRecordText = findViewById(R.id.record_text);
+        this.mLoadingText = findViewById(R.id.loading_text);
+
+        this.mLoadingText.setVisibility(View.INVISIBLE);
+        this.mRecordText.setText("Press the red button to start recording");
+        this.mLoadingText.setText("Loading...");
+        this.mRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(view.getId() == R.id.record_button) {
@@ -68,37 +68,12 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
             }
         });
 
-        speech = new SpeechView(getApplicationContext(), this);
-        loading = new startLoading();
-    }
+        this.speech = new SpeechView(getApplicationContext(), this);
+        this.loading = new startLoading();
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    /**
-     * Checks if app has permissions to record audio
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch(requestCode) {
-            case REQUEST_RECORD_AUDIO_PERMISSION:
-                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                break;
-        }
-        if(!permissionToRecordAccepted) {
-            finish();
-        }
+        Intent received = getIntent();
+        this.speed = received.getIntExtra("speed", 1);
+        this.showText = received.getBooleanExtra("showText", true);
     }
 
     /**
@@ -108,12 +83,12 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
      */
     public void onRecord(boolean start) {
         if(start) {
-            mRecordText.setText("Press the button again to stop recording");
-            speech.startListening();
+            this.mRecordText.setText("Press the button again to stop recording");
+            this.speech.startListening();
         } else {
-            mRecordText.setText("Press the red button to start recording");
-            speech.stopListening();
-            loading.execute();
+            this.mRecordText.setText("Press the red button to start recording");
+            this.speech.stopListening();
+            this.loading.execute();
         }
     }
 
@@ -122,8 +97,73 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
      */
     @Override
     public void onSuccess() {
-        startActivity(intent);
-        loading.cancel(true);
+        Intent intent = new Intent(this,SignViewerActivity.class);
+        intent.putExtra("showText", this.showText);
+        this.loading.cancel(true);
+        startActivityForResult(intent, this.VIEWER);
+    }
+
+    /**
+     * User has hit something in the action bar
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(this,SettingsActivity.class);
+                settingsIntent.putExtra("showText", this.showText);
+                settingsIntent.putExtra("speed", this.speed);
+                startActivityForResult(settingsIntent, this.SETTINGS);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Result has been sent back from activity - either settings page or sign viewer page
+     * @param requestCode
+     * @param resultCode
+     * @param intent
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if(requestCode == this.SETTINGS) {
+            this.speed = intent.getIntExtra("speed", 2);
+            this.showText = intent.getBooleanExtra("showText", true);
+            this.speech.updateSpeed(speed);
+
+        }
+        if(requestCode == this.VIEWER) {
+            if(resultCode == RESULT_CANCELED) {
+                Intent restart = getIntent();
+                restart.putExtra("speed", this.speed);
+                restart.putExtra("showText", this.showText);
+                finish();
+                startActivity(restart);
+            } else {
+                Boolean replay = intent.getBooleanExtra("replay", false);
+                if(replay) {
+                    this.speech.replaySequence();
+                    this.onSuccess();
+                }
+            }
+        }
+    }
+
+    /**
+     * Add my customised menu to the toolbar of the app
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     /**
@@ -140,26 +180,6 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
             mRecordButton.setVisibility(View.INVISIBLE);
             mRecordText.setVisibility(View.INVISIBLE);
             mLoadingText.setVisibility(View.VISIBLE);
-        }
-
-        /**
-         * Resets screen ready for next input
-         * @param aVoid
-         */
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            mRecordButton.setVisibility(View.VISIBLE);
-            mRecordText.setVisibility(View.VISIBLE);
-            mLoadingText.setVisibility(View.INVISIBLE);
-        }
-
-        /**
-         * Cancels task
-         */
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
         }
 
         /**
@@ -200,6 +220,7 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
                 }
                 SystemClock.sleep(100);
             }
+            cancel(true);
             return null;
         }
     }

@@ -125,8 +125,7 @@ public class VerbPhrase {
         if(this.adverbs.size() > 0) {
             VP.addAll(this.adverbs);
         }
-        System.out.println("Lemma: " + lemmaVerb);
-        System.out.println("Verb: " + verb);
+        //lemma/original verb
         if(!this.lemmaVerb.equals(""))
         {
             VP.add(this.lemmaVerb);

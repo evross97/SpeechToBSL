@@ -1,5 +1,7 @@
 package c.example.speechtobsl.models;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,36 +19,11 @@ import c.example.speechtobsl.structure_converter.utils.POS;
  */
 public class StructureConverterModel {
 
-    /**
-     * Till Connector is found:
-     * - Look at next word in sentence and analyse accordingly
-     * - If connector is found - add everything found so far to clause
-     *
-     * NPs
-     * 1. Find all nouns
-     * 2. For each noun - find all POS that are linked to that noun
-     * 3. Create NP from all above info
-     *
-     * VPs
-     * 1. Find all verbs
-     * 2. For each verb - find all POS that are linked to that verb
-     * 3. Create VP from all above
-     *
-     * Clauses
-     * 1. Add connector
-     * 2. Add NP list
-     * 3. Add VP list
-     * 4. Add index to clause
-     * 5. Add time frame
-     *
-     * Join Clauses
-     */
-
+    private final String LOG_TAG = "BSL App - StructureConverterModel";
 
     private ArrayList<JSONObject> POSTags;
     private ArrayList<JSONObject> parse;
     private ArrayList<String> englishText;
-    private ArrayList<String> sentence;
 
     private TagModel tagger;
     private ClauseModel cModel;
@@ -55,10 +32,8 @@ public class StructureConverterModel {
      * Instantiates a new structure converter model.
      */
     public StructureConverterModel() {
-        this.sentence = new ArrayList<>();
         this.POSTags = new ArrayList<>();
         this.parse = new ArrayList<>();
-
     }
 
     /**
@@ -80,12 +55,10 @@ public class StructureConverterModel {
     public ArrayList<String> convertSentence(JSONObject englishParsedText, String originalText) {
         this.POSTags.clear();
         this.parse.clear();
-        this.sentence.clear();
         this.extractData(englishParsedText, originalText);
         this.tagger = new TagModel(this.POSTags, this.englishText);
         this.cModel = new ClauseModel(this.POSTags,this.parse,this.englishText);
-        this.createClauses();
-        return this.sentence;
+        return this.createClauses();
     }
 
     /**
@@ -101,10 +74,8 @@ public class StructureConverterModel {
             JSONObject sentence = (JSONObject) sentences.get(0);
             this.POSTags = this.toArrayList((JSONArray)sentence.get("tokens"));
             this.parse = this.toArrayList((JSONArray)sentence.get("enhancedPlusPlusDependencies"));
-            System.out.println(this.englishText);
-
         } catch(JSONException e) {
-            System.out.println("Failed to extract tags and parse of sentence: " + e.getMessage());
+            Log.i(LOG_TAG,"Failed to extract tags and parse of sentence: " + e.getMessage());
         }
     }
 
@@ -120,7 +91,7 @@ public class StructureConverterModel {
             try {
                 arrayList.add((JSONObject)jsonArray.get(i));
             } catch(JSONException e) {
-                System.out.println("Failed to convert to arraylist: " + e.getMessage());
+                Log.i(LOG_TAG,"Failed to convert to arraylist: " + e.getMessage());
             }
         }
         return arrayList;
@@ -130,7 +101,8 @@ public class StructureConverterModel {
      * Creates BSL clauses from the English sentence
      * Adds all words to a list and once a connective/the end of the sentence is reached, a new clause is created from the list
      */
-    private void createClauses() {
+    private ArrayList<String> createClauses() {
+        ArrayList<String> sentence = new ArrayList<>();
         ArrayList<String> currentClauseWords = new ArrayList<>();
         Integer clauseIndex = 0;
         for(int i=0; i < this.englishText.size(); i++) {
@@ -138,8 +110,7 @@ public class StructureConverterModel {
             POS tag = this.tagger.getGeneralTag(word, true);
             switch (tag) {
                 case CONN:
-                    //shouldn't this be added after cleared so that it's in the next clause???
-                    this.sentence.addAll(this.cModel.createClause(currentClauseWords,clauseIndex).toArrayString());
+                    sentence.addAll(this.cModel.createClause(currentClauseWords,clauseIndex).toArrayString());
                     currentClauseWords.clear();
                     currentClauseWords.add(word);
                     clauseIndex++;
@@ -148,6 +119,7 @@ public class StructureConverterModel {
                     currentClauseWords.add(word);
             }
         }
-        this.sentence.addAll(this.cModel.createClause(currentClauseWords,clauseIndex).toArrayString());
+        sentence.addAll(this.cModel.createClause(currentClauseWords,clauseIndex).toArrayString());
+        return sentence;
     }
 }

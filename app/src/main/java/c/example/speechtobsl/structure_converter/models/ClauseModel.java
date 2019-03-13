@@ -1,5 +1,7 @@
 package c.example.speechtobsl.structure_converter.models;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +17,8 @@ import c.example.speechtobsl.structure_converter.utils.POS;
  * Used to create and manipulate clauses.
  */
 public class ClauseModel {
+
+    private final String LOG_TAG = "BSL App - ClauseModel";
 
     private ArrayList<JSONObject> POSTags;
     private ArrayList<JSONObject> parse;
@@ -62,7 +66,6 @@ public class ClauseModel {
             POS tag = this.tagger.getGeneralTag(word,true);
             switch (tag) {
                 case NOUN:
-                    System.out.println("Noun:" + word);
                     NounPhrase newNP = this.nModel.createNP(this.clauseWords, word);
                     NPs.add(newNP);
                     break;
@@ -153,7 +156,7 @@ public class ClauseModel {
                     tense = 2;
                 }
             } catch (JSONException e) {
-                System.out.println("Failed to check tense of verbs: " + e.getMessage());
+                Log.i(LOG_TAG,"Failed to check tense of verbs: " + e.getMessage());
             }
             if(tense.equals(1)) {
                 clause.setTimeFrame("BEFORE");
