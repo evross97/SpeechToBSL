@@ -1,6 +1,5 @@
 package c.example.speechtobsl.controllers;
 
-
 import android.content.Context;
 
 import org.json.JSONObject;
@@ -57,4 +56,17 @@ public class MainController {
         this.signView.showSequence(signs);
     }
 
+    /**
+     * Tells the sign view to repeat the previous sequence
+     */
+    public void replaySequence() {
+        this.signView.replaySequence();
+    }
+
+    /**
+     * Tells the sign view the new speed to play the sequence at
+     */
+    public void updateSpeed(Integer speed) {
+        this.signView.speedUpdate(speed);
+    }
 }

@@ -1,5 +1,7 @@
 package c.example.speechtobsl.structure_converter.models;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,6 +19,8 @@ import static c.example.speechtobsl.structure_converter.utils.POS.PREP;
  * Used to create and manipulate noun phrases.
  */
 public class NounModel {
+
+    private final String LOG_TAG = "BSL App - NounModel";
 
     private ArrayList<JSONObject> POSTags;
     private ArrayList<JSONObject> parse;
@@ -49,17 +53,7 @@ public class NounModel {
      */
     public NounPhrase createNP(ArrayList<String> clauseWords, String noun) {
         NounPhrase NP = new NounPhrase(noun);
-        //Adjectives
-        ArrayList<String> stringAdjs = this.parser.findLinks(clauseWords, noun, ADJ);
-        ArrayList<Adjective> adjs = new ArrayList<>();
-        for(int i = 0; i < stringAdjs.size(); i++) {
-            String currentAdj = stringAdjs.get(i);
-            ArrayList<String> advs = this.parser.findLinks(clauseWords, currentAdj, ADV);
-            Adjective adj = new Adjective(currentAdj, advs);
-            adjs.add(adj);
-        }
-        NP.setAdjectives(adjs);
-
+        NP.setAdjectives(this.createAdjectives(clauseWords, noun));
         //Det
         ArrayList<String> dets = this.parser.findLinks(clauseWords, noun, DET);
         if(!dets.isEmpty()) {
@@ -71,20 +65,57 @@ public class NounModel {
             NP.setPreposition(preps.get(0));
         }
         //Plural
+        NP.setPlural(this.isPlural(noun));
+        if(NP.getPlural()) {
+            NP.setNoun(this.getSingular(noun));
+        }
+        NP.setSubject(this.isSubject(noun));
+        return NP;
+    }
+
+    /**
+     * Creates the list of adjectives for the current noun
+     * @param clauseWords used to check that the connected adjectives are in the current clause
+     * @param noun
+     * @return list of adjectives
+     */
+    private ArrayList<Adjective> createAdjectives(ArrayList<String> clauseWords, String noun) {
+        ArrayList<String> stringAdjs = this.parser.findLinks(clauseWords, noun, ADJ);
+        ArrayList<Adjective> adjs = new ArrayList<>();
+        for(int i = 0; i < stringAdjs.size(); i++) {
+            String currentAdj = stringAdjs.get(i);
+            ArrayList<String> advs = this.parser.findLinks(clauseWords, currentAdj, ADV);
+            Adjective adj = new Adjective(currentAdj, advs);
+            adjs.add(adj);
+        }
+        return adjs;
+    }
+
+    /**
+     * Determines if the noun is in plural form
+     * @param noun
+     * @return true if plural
+     */
+    private Boolean isPlural(String noun) {
         Boolean plural = false;
         try{
             JSONObject currentTag = this.tagger.getExactTag(noun, true);
             String pos = currentTag.getString("pos");
             if (pos.equals("NNS") || pos.equals("NNPS")) {
                 plural = true;
-                NP.setNoun(this.getSingular(noun));
             }
         } catch(JSONException e) {
-            System.out.println("Unable to check if noun ("+ noun + ") is plural: " + e.getMessage());
+            Log.i(LOG_TAG,"Unable to check if noun ("+ noun + ") is plural: " + e.getMessage());
         }
-        NP.setPlural(plural);
+        return plural;
+    }
 
-        //IsSubject
+    /**
+     * Determines if the current noun is the subject of the current clause
+     * @param noun
+     * @return true if the noun is the subject
+     */
+    private Boolean isSubject(String noun) {
         Boolean nsubj = false;
         ArrayList<JSONObject> links = this.parser.getLinkedParses(noun);
         for(int j = 0; j < links.size(); j++) {
@@ -98,14 +129,11 @@ public class NounModel {
                         break;
                     }
                 }
-
             } catch(JSONException e) {
-                System.out.println("Failed to extract governor from parse: " + e.getMessage());
+                Log.i(LOG_TAG,"Failed to extract governor from parse: " + e.getMessage());
             }
         }
-        NP.setSubject(nsubj);
-        //System.out.println("NP: " + NP.toArrayString());
-        return NP;
+        return nsubj;
     }
 
     /**
@@ -120,7 +148,7 @@ public class NounModel {
             JSONObject currentTag = this.tagger.getExactTag(plural,true);
             sing = currentTag.getString("lemma");
         } catch (JSONException e) {
-            System.out.println("Failed to get singular of noun: " + e.getMessage());
+            Log.i(LOG_TAG,"Failed to get singular of noun: " + e.getMessage());
         }
         return sing;
     }

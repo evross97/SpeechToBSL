@@ -19,6 +19,9 @@ public class SignView {
     private Integer currentImageIndex;
     private Intent intent;
 
+    private Integer speed;
+    private Integer delayTime = 1500;
+
     /**
      * Instantiates a new Sign view.
      *
@@ -39,22 +42,24 @@ public class SignView {
         this.BSLImages.clear();
         this.BSLImages = images;
         this.currentImageIndex = 0;
+        Image end = new Image(null, "endSentence");
+        this.BSLImages.add(end);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 nextImage();
             }
-        }, 100);
+        }, this.delayTime);
     }
 
     /**
      * Works out what type of image is to be shown next and sends it to the activity
      * - BSL sign - sends image and description
      * - Blank - break inbetween signs
-     * Type ofimage also determines how long wait should be before next sign is shown
+     * Type of image also determines how long wait should be before next sign is shown
      */
     private void nextImage() {
-        Integer delayTime = 1000;
+        Integer currentDelay = this.delayTime;
         if(currentImageIndex < this.BSLImages.size()) {
             Image currentImage = this.BSLImages.get(currentImageIndex);
             if(currentImage.getImage() != null) {
@@ -65,14 +70,18 @@ public class SignView {
                 LocalBroadcastManager.getInstance(this.appCtx.getApplicationContext()).sendBroadcast(this.intent);
             } else {
                 if(currentImage.getDesc().equals("endWord")) {
-                    delayTime = 100;
+                    currentDelay = this.delayTime/10;
                 }
                 else {
-                    delayTime = 10;
+                    currentDelay = this.delayTime/100;
                 }
                 this.intent.putExtra("command", "image_background");
                 this.intent.putExtra("color", android.R.color.white);
-                this.intent.putExtra("desc", " ");
+                if(currentImage.getDesc().equals("endSentence")) {
+                    this.intent.putExtra("desc", "end");
+                } else {
+                    this.intent.putExtra("desc", " ");
+                }
                 LocalBroadcastManager.getInstance(this.appCtx.getApplicationContext()).sendBroadcast(this.intent);
             }
             currentImageIndex++;
@@ -81,7 +90,42 @@ public class SignView {
                 public void run() {
                     nextImage();
                 }
-            }, delayTime);
+            }, currentDelay);
+        }
+    }
+
+    /**
+     * Replay button has been pressed, call nextImage after resetting the current image index so that all the signs are displayed again
+     */
+    public void replaySequence() {
+        this.currentImageIndex = 0;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                nextImage();
+            }
+        }, delayTime);
+    }
+
+    /**
+     * Update the time between sign picture changes
+     * 2 - fast speed - max 1sec between images
+     * 1 - medium speed - max 1.5sec between images
+     * 0 - slow speed - max 2sec between images
+     * @param speed
+     */
+    public void speedUpdate(Integer speed) {
+        this.speed = speed;
+        switch (this.speed) {
+            case 2:
+                this.delayTime = 1000;
+                break;
+            case 1:
+                this.delayTime = 1500;
+                break;
+            case 0:
+                this.delayTime = 2000;
+                break;
         }
     }
 }

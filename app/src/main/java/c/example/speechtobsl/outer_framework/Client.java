@@ -1,9 +1,5 @@
 package c.example.speechtobsl.outer_framework;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -16,14 +12,10 @@ import java.net.URL;
  */
 public class Client {
 
-    private Context appCtx;
-    private Intent localIntent = new Intent("client");
-
     /**
      * Instantiates a new Client.
      */
-    public Client() {
-    }
+    public Client() {}
 
     /**
      * Send request and return the response
@@ -65,12 +57,9 @@ public class Client {
                 connection.setRequestProperty("app_key", "5836a8400e0fcbcc9922288a0479ca6d");
             }
 
-
             //Response - input
             BufferedReader bf = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
             String line;
-
             while ((line=bf.readLine())!=null) {
                 sb.append(line);
             }
