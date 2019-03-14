@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import c.example.speechtobsl.entities.Image;
-import c.example.speechtobsl.outer_framework.SuccessListener;
+import c.example.speechtobsl.outer_framework.EndListener;
 import c.example.speechtobsl.views.SignView;
 
 /**
@@ -19,7 +19,7 @@ public class MainController {
     ConverterController cController;
     ImageRetrieverController iController;
     SignView signView;
-    SuccessListener listener;
+    EndListener listener;
 
     /**
      * Instantiates a new Main controller.
@@ -27,7 +27,7 @@ public class MainController {
      * @param ctx      the context - needed for sign view and database
      * @param listener the success listener
      */
-    public MainController(Context ctx, SuccessListener listener) {
+    public MainController(Context ctx, EndListener listener) {
         this.cController = new ConverterController();
         this.iController = new ImageRetrieverController(ctx);
         this.signView = new SignView(ctx);
@@ -43,8 +43,12 @@ public class MainController {
         ArrayList<String> BSLSentence = this.cController.convertSentence(text);
         ArrayList<JSONObject> tags = this.cController.getTags();
         ArrayList<String> splitSentence = new ArrayList<>(Arrays.asList(text.split(" ")));
-        ArrayList<Image> BSLSigns = this.iController.getImageSentence(BSLSentence, tags, splitSentence);
-        this.showOutput(BSLSigns);
+        if(BSLSentence.size() > 0 ) {
+            ArrayList<Image> BSLSigns = this.iController.getImageSentence(BSLSentence, tags, splitSentence);
+            this.showOutput(BSLSigns);
+        } else {
+            this.listener.onFailure();
+        }
     }
 
     /**

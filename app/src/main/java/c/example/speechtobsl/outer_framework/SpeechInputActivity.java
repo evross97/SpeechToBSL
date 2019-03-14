@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import c.example.speechtobsl.R;
 import c.example.speechtobsl.views.SpeechView;
@@ -20,7 +21,7 @@ import c.example.speechtobsl.views.SpeechView;
 /**
  * Main screen - used for speech input and to access the settings page
  */
-public class SpeechInputActivity extends AppCompatActivity implements SuccessListener{
+public class SpeechInputActivity extends AppCompatActivity implements EndListener{
 
     private Button mRecordButton = null;
     private TextView mRecordText = null;
@@ -101,6 +102,22 @@ public class SpeechInputActivity extends AppCompatActivity implements SuccessLis
         intent.putExtra("showText", this.showText);
         this.loading.cancel(true);
         startActivityForResult(intent, this.VIEWER);
+    }
+
+    /**
+     * Called when the controller wasn't able to convert the sentence
+     */
+    @Override
+    public void onFailure() {
+        Intent restart = getIntent();
+        restart.putExtra("speed", this.speed);
+        restart.putExtra("showText", this.showText);
+        finish();
+        startActivity(restart);
+        CharSequence text = "Translation failed - please try again";
+        int duration = Toast.LENGTH_LONG;
+        Toast toast = Toast.makeText(this, text, duration);
+        toast.show();
     }
 
     /**

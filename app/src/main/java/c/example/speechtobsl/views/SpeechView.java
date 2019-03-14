@@ -11,7 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import c.example.speechtobsl.controllers.MainController;
-import c.example.speechtobsl.outer_framework.SuccessListener;
+import c.example.speechtobsl.outer_framework.EndListener;
 
 /**
  * The view that receives instructions from the Speech Actiivty
@@ -22,6 +22,7 @@ public class SpeechView implements RecognitionListener {
     private Intent recogniserIntent;
     private String decodedSpeech;
     private MainController mController;
+    private EndListener listener;
 
     private Context appCtx;
 
@@ -33,8 +34,9 @@ public class SpeechView implements RecognitionListener {
      * @param ctx      the context - needs to be sent to the main controller
      * @param listener the success listener - needs to be sent to the main controller
      */
-    public SpeechView(Context ctx, SuccessListener listener) {
+    public SpeechView(Context ctx, EndListener listener) {
         this.appCtx = ctx;
+        this.listener = listener;
         mController = new MainController(appCtx, listener);
         speech = SpeechRecognizer.createSpeechRecognizer(appCtx);
         speech.setRecognitionListener(this);
@@ -81,6 +83,7 @@ public class SpeechView implements RecognitionListener {
     @Override
     public void onError(int code) {
         Log.i(LOG_TAG, "FAILED with error code " + getErrorText(code));
+        this.listener.onFailure();
     }
 
     /**

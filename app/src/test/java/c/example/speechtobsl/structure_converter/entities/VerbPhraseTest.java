@@ -77,9 +77,10 @@ public class VerbPhraseTest {
     @Test
     public void setNegated() {
         ArrayList<String> before1 = this.vp2.toArrayString();
-        this.vp2.setPrepVerb(true);
+        this.vp2.setNegated(true);
         ArrayList<String> after1 = this.vp2.toArrayString();
-        assertEquals(before1, after1);
+        assertNotEquals(before1, after1);
+        assertTrue(after1.contains("NO"));
     }
 
     @Test
