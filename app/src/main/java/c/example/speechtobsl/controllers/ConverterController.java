@@ -51,7 +51,7 @@ public class ConverterController {
             return BSLText;
         } catch(JSONException e) {
             Log.i(LOG_TAG, "Unable to convert parsed text to JSON: " + e.getMessage());
-            return new ArrayList<>();
         }
+        return new ArrayList<>();
     }
 }
