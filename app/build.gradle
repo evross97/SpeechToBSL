@@ -22,9 +22,6 @@ android {
     }
     testOptions {
         unitTests.includeAndroidResources = true
-        unitTests {
-            returnDefaultValues = true
-        }
     }
 }
 
@@ -42,6 +39,7 @@ dependencies {
     testImplementation 'org.json:json:20180813'
     testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'org.mockito:mockito-android:2.6.3'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     // Core library

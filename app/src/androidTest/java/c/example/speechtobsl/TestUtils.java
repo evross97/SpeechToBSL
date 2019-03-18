@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import c.example.speechtobsl.entities.Image;
 import c.example.speechtobsl.structure_converter.entities.Adjective;
 import c.example.speechtobsl.structure_converter.entities.Clause;
 import c.example.speechtobsl.structure_converter.entities.NounPhrase;
@@ -62,6 +63,12 @@ public class TestUtils {
     public ArrayList<String> parsedSentence;
 
     public String synResponse;
+
+    public ArrayList<String> BSLSentence;
+
+    public Image blg;
+    public Image where;
+    public Image hound;
 
 
     public TestUtils() {
@@ -875,5 +882,10 @@ public class TestUtils {
                 "        }\n" +
                 "    ]\n" +
                 "}";
+
+        this.BSLSentence = new ArrayList<>(Arrays.asList("blg", "dog", "where"));
+        this.where = new Image(new byte[]{}, "WHERE");
+        this.hound = new Image(new byte[]{}, "DOG");
+        this.blg = new Image(new byte[]{}, "BLG");
     }
 }
