@@ -17,7 +17,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Integer speedValue = 1;
     private Boolean showText = true;
 
-    private SeekBar speed;
+    public SeekBar speed;
     private Switch textSwitch;
 
     @Override

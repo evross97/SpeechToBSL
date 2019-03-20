@@ -18,11 +18,11 @@ import c.example.speechtobsl.outer_framework.EndListener;
  */
 public class SpeechView implements RecognitionListener {
 
-    private SpeechRecognizer speech;
     private Intent recogniserIntent;
     private String decodedSpeech;
-    private MainController mController;
-    private EndListener listener;
+    public MainController mController;
+    public EndListener listener;
+    public SpeechRecognizer speech;
 
     private Context appCtx;
 

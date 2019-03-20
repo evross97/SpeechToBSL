@@ -1,4 +1,4 @@
-package c.example.speechtobsl;
+package c.example.speechtobsl.utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +60,8 @@ public class TestUtils {
 
     public JSONObject parsedText;
     public ArrayList<String> parsedSentence;
+
+    public String synResponse;
 
 
     public TestUtils() {
@@ -729,5 +731,149 @@ public class TestUtils {
 
         String[] ordered = new String[]{"MANY", "dog", "big", "MANY", "name", "of", "what", "and", "FUTURE", "they", "could", "quickly", "run"};
         this.parsedSentence = new ArrayList<>(Arrays.asList(ordered));
+
+        this.synResponse = "{\n" +
+                "    \"metadata\": {\n" +
+                "        \"provider\": \"Oxford University Press\"\n" +
+                "    },\n" +
+                "    \"results\": [\n" +
+                "        {\n" +
+                "            \"id\": \"dog\",\n" +
+                "            \"language\": \"en\",\n" +
+                "            \"lexicalEntries\": [\n" +
+                "                {\n" +
+                "                    \"entries\": [\n" +
+                "                        {\n" +
+                "                            \"homographNumber\": \"000\",\n" +
+                "                            \"senses\": [\n" +
+                "                                {\n" +
+                "                                    \"examples\": [\n" +
+                "                                        {\n" +
+                "                                            \"text\": \"she went for long walks with her dog\"\n" +
+                "                                        }\n" +
+                "                                    ],\n" +
+                "                                    \"id\": \"t_en_gb0004343.001\",\n" +
+                "                                    \"subsenses\": [\n" +
+                "                                        {\n" +
+                "                                            \"id\": \"idccfb77bf-0c24-4713-a84f-ebf42c1071ea\",\n" +
+                "                                            \"synonyms\": [\n" +
+                "                                                {\n" +
+                "                                                    \"id\": \"male_dog\",\n" +
+                "                                                    \"language\": \"en\",\n" +
+                "                                                    \"text\": \"male dog\"\n" +
+                "                                                }\n" +
+                "                                            ]\n" +
+                "                                        },\n" +
+                "                                        {\n" +
+                "                                            \"id\": \"id677cfcb8-6e37-4be1-9d58-d5d3581d55d6\",\n" +
+                "                                            \"synonyms\": [\n" +
+                "                                                {\n" +
+                "                                                    \"id\": \"bitch\",\n" +
+                "                                                    \"language\": \"en\",\n" +
+                "                                                    \"text\": \"bitch\"\n" +
+                "                                                },\n" +
+                "                                                {\n" +
+                "                                                    \"id\": \"pup\",\n" +
+                "                                                    \"language\": \"en\",\n" +
+                "                                                    \"text\": \"pup\"\n" +
+                "                                                },\n" +
+                "                                                {\n" +
+                "                                                    \"id\": \"puppy\",\n" +
+                "                                                    \"language\": \"en\",\n" +
+                "                                                    \"text\": \"puppy\"\n" +
+                "                                                },\n" +
+                "                                                {\n" +
+                "                                                    \"id\": \"whelp\",\n" +
+                "                                                    \"language\": \"en\",\n" +
+                "                                                    \"text\": \"whelp\"\n" +
+                "                                                }\n" +
+                "                                            ]\n" +
+                "                                        },\n" +
+                "                                        {\n" +
+                "                                            \"id\": \"id1706880e-1528-4539-901f-8e78a90ad1d0\",\n" +
+                "                                            \"registers\": [\n" +
+                "                                                \"informal\"\n" +
+                "                                            ],\n" +
+                "                                            \"synonyms\": [\n" +
+                "                                                {\n" +
+                "                                                    \"id\": \"doggy\",\n" +
+                "                                                    \"language\": \"en\",\n" +
+                "                                                    \"text\": \"doggy\"\n" +
+                "                                                },\n" +
+                "                                                {\n" +
+                "                                                    \"id\": \"pooch\",\n" +
+                "                                                    \"language\": \"en\",\n" +
+                "                                                    \"text\": \"pooch\"\n" +
+                "                                                },\n" +
+                "                                                {\n" +
+                "                                                    \"id\": \"mutt\",\n" +
+                "                                                    \"language\": \"en\",\n" +
+                "                                                    \"text\": \"mutt\"\n" +
+                "                                                }\n" +
+                "                                            ]\n" +
+                "                                        },\n" +
+                "                                        {\n" +
+                "                                            \"id\": \"id212a1d84-bd0e-41c8-9b02-09eac6a672d7\",\n" +
+                "                                            \"regions\": [\n" +
+                "                                                \"Australian\"\n" +
+                "                                            ],\n" +
+                "                                            \"registers\": [\n" +
+                "                                                \"informal\"\n" +
+                "                                            ],\n" +
+                "                                            \"synonyms\": [\n" +
+                "                                                {\n" +
+                "                                                    \"id\": \"mong\",\n" +
+                "                                                    \"language\": \"en\",\n" +
+                "                                                    \"text\": \"mong\"\n" +
+                "                                                },\n" +
+                "                                                {\n" +
+                "                                                    \"id\": \"bitzer\",\n" +
+                "                                                    \"language\": \"en\",\n" +
+                "                                                    \"text\": \"bitzer\"\n" +
+                "                                                }\n" +
+                "                                            ]\n" +
+                "                                        }\n" +
+                "                                    ],\n" +
+                "                                    \"synonyms\": [\n" +
+                "                                        {\n" +
+                "                                            \"id\": \"hound\",\n" +
+                "                                            \"language\": \"en\",\n" +
+                "                                            \"text\": \"hound\"\n" +
+                "                                        },\n" +
+                "                                        {\n" +
+                "                                            \"id\": \"canine\",\n" +
+                "                                            \"language\": \"en\",\n" +
+                "                                            \"text\": \"canine\"\n" +
+                "                                        },\n" +
+                "                                        {\n" +
+                "                                            \"id\": \"mongrel\",\n" +
+                "                                            \"language\": \"en\",\n" +
+                "                                            \"text\": \"mongrel\"\n" +
+                "                                        },\n" +
+                "                                        {\n" +
+                "                                            \"id\": \"cur\",\n" +
+                "                                            \"language\": \"en\",\n" +
+                "                                            \"text\": \"cur\"\n" +
+                "                                        },\n" +
+                "                                        {\n" +
+                "                                            \"id\": \"tyke\",\n" +
+                "                                            \"language\": \"en\",\n" +
+                "                                            \"text\": \"tyke\"\n" +
+                "                                        }\n" +
+                "                                    ]\n" +
+                "                                }\n" +
+                "                            ]\n" +
+                "                        }\n" +
+                "                    ],\n" +
+                "                    \"language\": \"en\",\n" +
+                "                    \"lexicalCategory\": \"Noun\",\n" +
+                "                    \"text\": \"dog\"\n" +
+                "                }\n" +
+                "            ],\n" +
+                "            \"type\": \"headword\",\n" +
+                "            \"word\": \"dog\"\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
     }
 }

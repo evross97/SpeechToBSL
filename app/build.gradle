@@ -4,11 +4,11 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "c.example.speechtobsl"
-        minSdkVersion 24
+        minSdkVersion 22
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -22,9 +22,7 @@ android {
     }
     testOptions {
         unitTests.includeAndroidResources = true
-        unitTests {
-            returnDefaultValues = true
-        }
+        unitTests.returnDefaultValues = true
     }
 }
 
@@ -40,7 +38,29 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.24.5'
     testImplementation 'org.json:json:20180813'
-    testImplementation 'androidx.test:core:1.0.0'
+    testImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'org.mockito:mockito-android:2.6.3'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    // Core library
+    androidTestImplementation 'androidx.test:core:1.1.0'
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.1.1'
+
+    // Assertions
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.ext:truth:1.1.0'
+    androidTestImplementation 'com.google.truth:truth:0.42'
+
+    // Espresso dependencies
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-web:3.1.1'
+    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.1.1'
 }

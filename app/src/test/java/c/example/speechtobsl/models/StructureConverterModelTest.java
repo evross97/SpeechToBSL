@@ -7,8 +7,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import c.example.speechtobsl.TestUtils;
-import c.example.speechtobsl.models.StructureConverterModel;
+import c.example.speechtobsl.utils.TestUtils;
 
 import static org.junit.Assert.*;
 

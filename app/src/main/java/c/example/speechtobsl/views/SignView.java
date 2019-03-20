@@ -15,12 +15,13 @@ import c.example.speechtobsl.entities.Image;
 public class SignView {
 
     private final Context appCtx;
-    private ArrayList<Image> BSLImages;
-    private Integer currentImageIndex;
-    private Intent intent;
+    public ArrayList<Image> BSLImages;
+    public Intent intent;
+    public Integer currentImageIndex;
+
 
     private Integer speed;
-    private Integer delayTime = 1500;
+    public Integer delayTime = 1000;
 
     /**
      * Instantiates a new Sign view.
@@ -34,7 +35,7 @@ public class SignView {
     }
 
     /**
-     * Show sequence of BSL images with 0.1 seconds inbetween each image
+     * Show sequence of BSL images with 1.5 seconds in-between each image
      *
      * @param images all BSL signs to be shown
      */
@@ -58,7 +59,7 @@ public class SignView {
      * - Blank - break inbetween signs
      * Type of image also determines how long wait should be before next sign is shown
      */
-    private void nextImage() {
+    public void nextImage() {
         Integer currentDelay = this.delayTime;
         if(currentImageIndex < this.BSLImages.size()) {
             Image currentImage = this.BSLImages.get(currentImageIndex);
@@ -118,13 +119,13 @@ public class SignView {
         this.speed = speed;
         switch (this.speed) {
             case 2:
-                this.delayTime = 1000;
-                break;
-            case 1:
-                this.delayTime = 1500;
+                this.delayTime = 500;
                 break;
             case 0:
-                this.delayTime = 2000;
+                this.delayTime = 1500;
+                break;
+            default:
+                this.delayTime = 1000;
                 break;
         }
     }

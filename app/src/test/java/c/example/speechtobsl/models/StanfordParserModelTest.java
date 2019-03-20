@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import c.example.speechtobsl.TestUtils;
+import c.example.speechtobsl.utils.TestUtils;
 import c.example.speechtobsl.outer_framework.Client;
 
 import static org.junit.Assert.*;

@@ -29,11 +29,11 @@ public class SpeechInputActivity extends AppCompatActivity implements EndListene
     private boolean mStartRecording = false;
 
 
-    private SpeechView speech = null;
+    public SpeechView speech = null;
     private startLoading loading = null;
 
-    private Integer speed = 1;
-    private Boolean showText = true;
+    public Integer speed = 1;
+    public Boolean showText = true;
 
     private final int SETTINGS = 1;
     private final int VIEWER = 2;
@@ -114,9 +114,8 @@ public class SpeechInputActivity extends AppCompatActivity implements EndListene
         restart.putExtra("showText", this.showText);
         finish();
         startActivity(restart);
-        CharSequence text = "Translation failed - please try again";
         int duration = Toast.LENGTH_LONG;
-        Toast toast = Toast.makeText(this, text, duration);
+        Toast toast = Toast.makeText(this, R.string.toast_text, duration);
         toast.show();
     }
 

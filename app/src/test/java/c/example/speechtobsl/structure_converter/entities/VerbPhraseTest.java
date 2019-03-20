@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import c.example.speechtobsl.TestUtils;
+import c.example.speechtobsl.utils.TestUtils;
 
 import static org.junit.Assert.*;
 
