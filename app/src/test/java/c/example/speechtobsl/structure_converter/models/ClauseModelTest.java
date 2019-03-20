@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import c.example.speechtobsl.TestUtils;
+import c.example.speechtobsl.utils.TestUtils;
 import c.example.speechtobsl.structure_converter.entities.Clause;
 
 import static org.junit.Assert.*;
@@ -45,7 +45,6 @@ public class ClauseModelTest {
         assertEquals(this.utils.c1.toArrayString(),result1.toArrayString());
         //has vps, connector, and prep for verb
         ArrayList<String> clauseWords2 = new ArrayList<>(this.sentence.subList(8,13));
-        System.out.println(clauseWords2);
         Clause result2 = model.createClause(clauseWords2,1);
         assertEquals(this.utils.c2.toArrayString(),result2.toArrayString());
         //has nps, incorrect timeframe - should create correct clause with timeframe omitted

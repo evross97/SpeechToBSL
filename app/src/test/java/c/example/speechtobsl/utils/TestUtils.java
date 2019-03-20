@@ -1,4 +1,4 @@
-package c.example.speechtobsl;
+package c.example.speechtobsl.utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 
-import c.example.speechtobsl.TestUtils;
+import c.example.speechtobsl.utils.TestUtils;
 import c.example.speechtobsl.outer_framework.Client;
 import c.example.speechtobsl.structure_converter.models.TagModel;
 

@@ -21,7 +21,7 @@ public class SignView {
 
 
     private Integer speed;
-    public Integer delayTime = 1500;
+    public Integer delayTime = 1000;
 
     /**
      * Instantiates a new Sign view.
@@ -59,8 +59,7 @@ public class SignView {
      * - Blank - break inbetween signs
      * Type of image also determines how long wait should be before next sign is shown
      */
-    private void nextImage() {
-        System.out.println("IN NEXT IMAGE");
+    public void nextImage() {
         Integer currentDelay = this.delayTime;
         if(currentImageIndex < this.BSLImages.size()) {
             Image currentImage = this.BSLImages.get(currentImageIndex);
@@ -86,7 +85,6 @@ public class SignView {
                 }
                 LocalBroadcastManager.getInstance(this.appCtx.getApplicationContext()).sendBroadcast(this.intent);
             }
-            System.out.println("IN Index: " + currentImageIndex);
             currentImageIndex++;
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -121,13 +119,13 @@ public class SignView {
         this.speed = speed;
         switch (this.speed) {
             case 2:
-                this.delayTime = 1000;
+                this.delayTime = 500;
                 break;
             case 0:
-                this.delayTime = 2000;
+                this.delayTime = 1500;
                 break;
             default:
-                this.delayTime = 1500;
+                this.delayTime = 1000;
                 break;
         }
     }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-import c.example.speechtobsl.TestUtils;
+import c.example.speechtobsl.utils.TestUtils;
 import c.example.speechtobsl.structure_converter.entities.NounPhrase;
 
 public class NounModelTest {

@@ -73,12 +73,9 @@ public class SignViewerActivity extends AppCompatActivity{
                     desc = "";
                     signsFinished();
                 }
-                System.out.println("IN RECEIVER");
                 if(showText) {
-                    System.out.println("Yes" + desc);
                     setDesc(desc);
                 } else {
-                    System.out.println("No");
                     setDesc("");
                 }
             }
