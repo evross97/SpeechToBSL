@@ -9,13 +9,13 @@
     <RelativeLayout
         android:id="@+id/topLevel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="551dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomLevel"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.050000012">
 
         <TextView
             android:id="@+id/title"
@@ -30,11 +30,12 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/title"
+            android:layout_below="@+id/title"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="-1dp"
             android:contentDescription="@string/logo_desc"
             android:scaleType="fitStart"
-            app:srcCompat="@drawable/logo_darker" />
+            app:srcCompat="@drawable/logo" />
 
     </RelativeLayout>
 
@@ -43,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="370dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
