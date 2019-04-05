@@ -26,7 +26,6 @@ public class StanfordParserModelTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         this.utils = new TestUtils();
-        //this.spModel = new StanfordParserModel();
     }
 
     @After

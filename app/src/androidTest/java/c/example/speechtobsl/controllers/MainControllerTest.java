@@ -31,7 +31,6 @@ public class MainControllerTest {
     private SignView spySView;
     private EndListener spyListener;
 
-    //Most wonderful line in the world!
     static { System.setProperty("org.mockito.android.target", ApplicationProvider.getApplicationContext().getCacheDir().getPath()); }
 
     @Before

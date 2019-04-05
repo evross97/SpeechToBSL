@@ -27,10 +27,6 @@ public class NounPhraseTest {
         this.np3 = this.utils.np3;
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void setNoun() {
         ArrayList<String> before1 = this.np1.toArrayString();
@@ -42,6 +38,7 @@ public class NounPhraseTest {
         ArrayList<String> before2 = this.np2.toArrayString();
         this.np2.setNoun("girl");
         ArrayList<String> after2 = this.np2.toArrayString();
+        assertNotEquals(before2, after2);
         assertEquals("[girl]", after2.toString());
     }
 

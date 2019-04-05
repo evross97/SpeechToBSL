@@ -27,11 +27,6 @@ public class ClauseTest {
         this.c3 = new Clause(2);
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
     public void setNPs() {
         ArrayList<NounPhrase> NPs = new ArrayList<>();

@@ -38,10 +38,6 @@ public class ConverterControllerTest {
         Mockito.when(this.scModel.convertSentence(any(JSONObject.class),eq(this.utils.englishString))).thenReturn(this.utils.parsedSentence);
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void getTags() {
         ArrayList<JSONObject> tags = this.cController.getTags();

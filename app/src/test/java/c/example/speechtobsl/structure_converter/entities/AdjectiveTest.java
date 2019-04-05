@@ -23,7 +23,6 @@ public class AdjectiveTest {
         this.adverbs.add("carefully");
         this.adj1 = new Adjective("big", adverbs);
         this.adj2 = new Adjective("small", new ArrayList<>());
-        this.adj3 = new Adjective("", new ArrayList<>());
     }
 
     @After
